@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lstech.Common\Lstech.Common.csproj" />
+    <ProjectReference Include="..\Lstech.Entities\Lstech.Entities.csproj" />
+    <ProjectReference Include="..\Lstech.FrameService\Lstech.FrameService.csproj" />
+    <ProjectReference Include="..\Lstech.IFrameService\Lstech.IFrameService.csproj" />
+  </ItemGroup>
+
+</Project>

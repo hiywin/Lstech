@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IdentityModel" Version="4.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lstech.BaseManager\Lstech.BaseManager.csproj" />
+    <ProjectReference Include="..\Lstech.Common\Lstech.Common.csproj" />
+    <ProjectReference Include="..\Lstech.Entities\Lstech.Entities.csproj" />
+    <ProjectReference Include="..\Lstech.FrameManager\Lstech.FrameManager.csproj" />
+    <ProjectReference Include="..\Lstech.IBaseManager\Lstech.IBaseManager.csproj" />
+    <ProjectReference Include="..\Lstech.IFrameManager\Lstech.IFrameManager.csproj" />
+    <ProjectReference Include="..\Lstech.Models\Lstech.Models.csproj" />
+  </ItemGroup>
+
+</Project>
