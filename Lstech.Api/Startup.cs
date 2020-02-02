@@ -6,6 +6,8 @@ using Lstech.Entities.Base;
 using Lstech.FrameManager;
 using Lstech.IBaseManager;
 using Lstech.IFrameManager;
+using Lstech.Mobile.HealthManager;
+using Lstech.Mobile.IHealthManager;
 using Lstech.Models.Base;
 using Lstech.PC.HealthManager;
 using Lstech.PC.IHealthManager;
@@ -76,6 +78,10 @@ namespace Lstech.Api
             /****** Lstech.PC.IHealthManager *****/
             services.AddSingleton<IHealthTitleManager, HealthTitleManager>();
             services.AddSingleton<IHealthContentManager, HealthContentManager>();
+            /****** Hiywin.IHealth_titleManager *****/
+            services.AddSingleton<IHealth_titleManager, Health_titleManager>();
+            /****** Hiywin.IHealth_contentManager *****/
+            services.AddSingleton<IHealth_contentManager, Health_contentManager>();
 
         }
 

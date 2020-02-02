@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lstech.Mobile.HealthService;
+using Lstech.Mobile.IHealthService;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,18 +10,50 @@ namespace Lstech.Utility
     {
         private static Dictionary<string, object> dic = new Dictionary<string, object>();
 
-        //public static IModuleService ModuleOperater
-        //{
-        //    get
-        //    {
-        //        var svr = dic["IModuleService"] as IModuleService;
-        //        if (svr != null) return svr;
+        public static bool Init()
+        {
+            if (!dic.ContainsKey("IHealth_titleService"))
+                dic.Add("IHealth_titleService", null);
 
-        //        svr = new ModuleService();
+            if (!dic.ContainsKey("IHealth_contentService"))
+                dic.Add("IHealth_contentService", null);
 
-        //        dic["IModuleService"] = svr;
-        //        return svr;
-        //    }
-        //}
+            return true;
+        }
+
+
+        /// <summary>
+        /// 体检内容表头
+        /// </summary>
+        public static IHealth_titleService HealthTitleOperater
+        {
+            get
+            {
+                var svr = dic["IHealth_titleService"] as IHealth_titleService;
+                if (svr != null) return svr;
+
+                svr = new Health_titleService();
+
+                dic["IHealth_titleService"] = svr;
+                return svr;
+            }
+        }
+
+        /// <summary>
+        /// 体检详细信息
+        /// </summary>
+        public static IHealth_contentService HealthContentOperater
+        {
+            get
+            {
+                var svr = dic["IHealth_contentService"] as IHealth_contentService;
+                if (svr != null) return svr;
+
+                svr = new Health_contentService();
+
+                dic["IHealth_contentService"] = svr;
+                return svr;
+            }
+        }
     }
 }

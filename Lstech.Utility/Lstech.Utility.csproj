@@ -9,6 +9,8 @@
     <ProjectReference Include="..\Lstech.Entities\Lstech.Entities.csproj" />
     <ProjectReference Include="..\Lstech.FrameService\Lstech.FrameService.csproj" />
     <ProjectReference Include="..\Lstech.IFrameService\Lstech.IFrameService.csproj" />
+    <ProjectReference Include="..\Lstech.Mobile.HealthService\Lstech.Mobile.HealthService.csproj" />
+    <ProjectReference Include="..\Lstech.Mobile.IHealthService\Lstech.Mobile.IHealthService.csproj" />
     <ProjectReference Include="..\Lstech.PC.HealthService\Lstech.PC.HealthService.csproj" />
     <ProjectReference Include="..\Lstech.PC.IHealthService\Lstech.PC.IHealthService.csproj" />
   </ItemGroup>

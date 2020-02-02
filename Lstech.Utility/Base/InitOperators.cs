@@ -16,6 +16,7 @@ namespace Lstech.Utility.Base
 
             flag = FrameOperaters.Init();
             flag = HealthPcOperaters.Init();
+            flag = HealthMobileOperaters.Init();
 
             return flag;
         }
