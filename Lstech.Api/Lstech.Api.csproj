@@ -24,6 +24,8 @@
     <ProjectReference Include="..\Lstech.IBaseManager\Lstech.IBaseManager.csproj" />
     <ProjectReference Include="..\Lstech.IFrameManager\Lstech.IFrameManager.csproj" />
     <ProjectReference Include="..\Lstech.Models\Lstech.Models.csproj" />
+    <ProjectReference Include="..\Lstech.PC.HealthManager\Lstech.PC.HealthManager.csproj" />
+    <ProjectReference Include="..\Lstech.PC.IHealthManager\Lstech.PC.IHealthManager.csproj" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,8 @@ using Lstech.FrameManager;
 using Lstech.IBaseManager;
 using Lstech.IFrameManager;
 using Lstech.Models.Base;
+using Lstech.PC.HealthManager;
+using Lstech.PC.IHealthManager;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -71,6 +73,9 @@ namespace Lstech.Api
             services.AddSingleton<IInitialManager, InitialManager>();
             /****** Hiywin.IFrameManager *****/
             services.AddSingleton<IModuleManager, ModuleManager>();
+            /****** Lstech.PC.IHealthManager *****/
+            services.AddSingleton<IHealthTitleManager, HealthTitleManager>();
+            services.AddSingleton<IHealthContentManager, HealthContentManager>();
 
         }
 

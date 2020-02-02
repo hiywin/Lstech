@@ -15,6 +15,7 @@ namespace Lstech.Utility.Base
             MssqlHelper.ConnCommon = sqlConn.MssqlConn;
 
             flag = FrameOperaters.Init();
+            flag = HealthPcOperaters.Init();
 
             return flag;
         }

@@ -1,7 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Lstech.PC.IHealthManager\Lstech.PC.IHealthManager.csproj" />
+    <ProjectReference Include="..\Lstech.Utility\Lstech.Utility.csproj" />
+  </ItemGroup>
 
 </Project>

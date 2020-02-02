@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Lstech.Models\Lstech.Models.csproj" />
+    <ProjectReference Include="..\Lstech.PC.IHealthService\Lstech.PC.IHealthService.csproj" />
+  </ItemGroup>
+
 </Project>
