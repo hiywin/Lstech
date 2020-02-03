@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Helpers;
+using Lstech.Common.Wcf;
 using Lstech.Entities.Base;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,13 @@ namespace Lstech.Utility.Base
             bool flag;
             MysqlHelper.MysqlConn = sqlConn.MysqlConn;
             MssqlHelper.ConnCommon = sqlConn.MssqlConn;
+            WcfInvoke.TlgChinaServiceUrl = sqlConn.TlgChinaServiceUrl;
+            WcfInvoke.LstechServiceUrl = sqlConn.LstechServiceUrl;
 
             flag = FrameOperaters.Init();
             flag = HealthPcOperaters.Init();
             flag = HealthMobileOperaters.Init();
+            flag = WCFOperators.Init();
 
             return flag;
         }

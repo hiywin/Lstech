@@ -16,8 +16,24 @@ namespace Lstech.Utility
                 dic.Add("IHealthTitleService", null);
             if (!dic.ContainsKey("IHealthContentService"))
                 dic.Add("IHealthContentService", null);
+            if (!dic.ContainsKey("IHealthAccountService"))
+                dic.Add("IHealthAccountService", null);
 
             return true;
+        }
+
+        public static IHealthAccountService HealthAccountOperater
+        {
+            get
+            {
+                var svr = dic["IHealthAccountService"] as IHealthAccountService;
+                if (svr != null) return svr;
+
+                svr = new HealthAccountService();
+
+                dic["IHealthAccountService"] = svr;
+                return svr;
+            }
         }
 
         public static IHealthTitleService HealthTitleOperater

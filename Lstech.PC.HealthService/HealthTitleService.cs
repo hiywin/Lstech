@@ -22,6 +22,11 @@ namespace Lstech.PC.HealthService
             condition += string.IsNullOrEmpty(query.Criteria.Content) ? string.Empty : string.Format(" and Content like '%{0}%' ", query.Criteria.Content);
             condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator like '%{0}%' ", query.Criteria.Creator);
             condition += query.Criteria.IsShow == null ? string.Empty : string.Format(" and IsShow = '{0}' ", query.Criteria.IsShow);
+            if (query.Criteria.IsParentQuery)
+            {
+                condition += string.IsNullOrEmpty(query.Criteria.ParentId) ? string.Format(" and (ParentId = '' or ParentId is null) ", query.Criteria.ParentId)
+                    : string.Format(" and ParentId = '{0}' ", query.Criteria.ParentId);
+            }
             string sql = string.Format(@"SELECT [Id]
                       ,[TitleId]
                       ,[Content]

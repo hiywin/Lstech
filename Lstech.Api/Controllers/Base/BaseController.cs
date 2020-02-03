@@ -39,8 +39,11 @@ namespace Lstech.Api.Controllers
                         case "userNo":
                             user.UserNo = claim.Value;
                             break;
-                        case ClaimTypes.Name:
+                        case "userName":
                             user.UserName = claim.Value;
+                            break;
+                        case "adAccount":
+                            user.AdAccount = claim.Value;
                             break;
                         case "isAdmin":
                             user.IsAdmin = Convert.ToBoolean(claim.Value);

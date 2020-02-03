@@ -28,7 +28,8 @@ namespace Lstech.Api.Authorize
                 new Claim(JwtRegisteredClaimNames.Jti,await _jwtOptions.JtiGenerator()),
                 new Claim(JwtRegisteredClaimNames.Iat,ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(),ClaimValueTypes.Integer64),
                 identity.FindFirst("userNo"),
-                identity.FindFirst(ClaimTypes.Name),
+                identity.FindFirst("userName"),
+                identity.FindFirst("adAccount"),
                 identity.FindFirst("isAdmin"),
             };
 
@@ -57,7 +58,8 @@ namespace Lstech.Api.Authorize
         {
             var claimsIdentity = new ClaimsIdentity(new GenericIdentity(user.UserNo, "Token"));
             claimsIdentity.AddClaim(new Claim("userNo", user.UserNo));
-            claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, user.UserName));
+            claimsIdentity.AddClaim(new Claim("userName", user.UserName));
+            claimsIdentity.AddClaim(new Claim("adAccount", user.AdAccount));
             claimsIdentity.AddClaim(new Claim("isAdmin", user.IsAdmin.ToString()));
 
             return claimsIdentity;

@@ -9,5 +9,7 @@ namespace Lstech.Models.Base
     {
         public string MysqlConn { get; set; }
         public string MssqlConn { get; set; }
+        public string TlgChinaServiceUrl { get; set; }
+        public string LstechServiceUrl { get; set; }
     }
 }

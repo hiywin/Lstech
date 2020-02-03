@@ -6,6 +6,7 @@ using Lstech.Api.Models.HealthTitle;
 using Lstech.Common.Data;
 using Lstech.PC.IHealthManager;
 using Lstech.PC.IHealthService.Structs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,7 @@ namespace Lstech.Api.Controllers
             _manager = manager;
         }
 
-        [HttpPost, Route("get_health_titles")]
+        [Authorize, HttpPost, Route("get_health_titles")]
         public async Task<IActionResult> GetHealthTitles(HealthTitleQueryViewModel model)
         {
             var query = new QueryData<HealthTitleQuery>()
@@ -38,7 +39,7 @@ namespace Lstech.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost,Route("health_title_save")]
+        [Authorize, HttpPost, Route("health_title_save")]
         public async Task<IActionResult> HealthTitleSave(HealthTitleSaveViewModel model)
         {
             var query = new QueryData<HealthTitleSaveQuery>()
@@ -62,7 +63,7 @@ namespace Lstech.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Route("health_title_update")]
+        [Authorize, HttpPost, Route("health_title_update")]
         public async Task<IActionResult> HealthTitleUpdate(HealthTitleUpdateViewModel model)
         {
             var query = new QueryData<HealthTitleUpdateQuery>()
@@ -86,7 +87,7 @@ namespace Lstech.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost, Route("health_title_delete")]
+        [Authorize, HttpPost, Route("health_title_delete")]
         public async Task<IActionResult> HealthTitleDelete(HealthTitleDeleteViewModel model)
         {
             var query = new QueryData<HealthTitleDeleteQuery>()

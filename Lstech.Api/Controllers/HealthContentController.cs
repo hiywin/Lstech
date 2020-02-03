@@ -6,6 +6,7 @@ using Lstech.Api.Models.HealthContent;
 using Lstech.Common.Data;
 using Lstech.PC.IHealthManager;
 using Lstech.PC.IHealthService.Structs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +22,24 @@ namespace Lstech.Api.Controllers
             _manager = manager;
         }
 
-        [HttpPost, Route("get_health_contents")]
+        //[Authorize, HttpPost, Route("get_health_contents")]
+        //public async Task<IActionResult> GetHealthContents(HealthContentQueryViewModel model)
+        //{
+        //    var query = new QueryData<HealthContentQuery>()
+        //    {
+        //        Criteria = new HealthContentQuery()
+        //        {
+        //            Answer = model.Answer,
+        //            Creator = model.Creator
+        //        },
+        //        PageModel = model.PageModel
+        //    };
+        //    var result = await _manager.GetHealthContentPageAsync(query);
+
+        //    return Ok(result);
+        //}
+
+        [Authorize, HttpPost, Route("get_health_contents")]
         public async Task<IActionResult> GetHealthContents(HealthContentQueryViewModel model)
         {
             var query = new QueryData<HealthContentQuery>()
@@ -33,7 +51,7 @@ namespace Lstech.Api.Controllers
                 },
                 PageModel = model.PageModel
             };
-            var result = await _manager.GetHealthContentPageAsync(query);
+            var result = await _manager.GetHealthContentPageAsyncEx(query);
 
             return Ok(result);
         }

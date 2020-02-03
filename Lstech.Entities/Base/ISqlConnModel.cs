@@ -8,5 +8,7 @@ namespace Lstech.Entities.Base
     {
         string MysqlConn { get; set; }
         string MssqlConn { get; set; }
+        string TlgChinaServiceUrl { get; set; }
+        string LstechServiceUrl { get; set; }
     }
 }

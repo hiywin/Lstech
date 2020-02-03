@@ -33,7 +33,12 @@ namespace Lstech.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson(op =>
+            { //Newtonsoft.Json
+                op.SerializerSettings.DateFormatString = "yy-MM-dd HH:mm";
+                op.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+            });
 
             var _secoretKey = Configuration["SecoretKey"];
             var _signingKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_secoretKey));
@@ -78,6 +83,7 @@ namespace Lstech.Api
             /****** Lstech.PC.IHealthManager *****/
             services.AddSingleton<IHealthTitleManager, HealthTitleManager>();
             services.AddSingleton<IHealthContentManager, HealthContentManager>();
+            services.AddSingleton<IHealthAccountManager, HealthAccountManager>();
             /****** Hiywin.IHealth_titleManager *****/
             services.AddSingleton<IHealth_titleManager, Health_titleManager>();
             /****** Hiywin.IHealth_contentManager *****/
@@ -90,6 +96,8 @@ namespace Lstech.Api
         {
             conn.MysqlConn = Configuration["ConnectionStrings:MysqlConn"];
             conn.MssqlConn = Configuration["ConnectionStrings:MssqlConn"];
+            conn.TlgChinaServiceUrl = Configuration["WcfWebUrls:TlgChinaUrl"];
+            conn.LstechServiceUrl = Configuration["WcfWebUrls:LstechUrl"];
 
             if (env.IsDevelopment())
             {

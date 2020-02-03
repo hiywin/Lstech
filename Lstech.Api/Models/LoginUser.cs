@@ -9,6 +9,7 @@ namespace Lstech.Api.Models
     {
         public string UserNo { get; set; }
         public string UserName { get; set; }
+        public string AdAccount { get; set; }
         public bool IsAdmin { get; set; }
     }
 }

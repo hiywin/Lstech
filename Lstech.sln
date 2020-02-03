@@ -39,21 +39,25 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.FrameService", "Lste
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.IFrameService", "Lstech.IFrameService\Lstech.IFrameService.csproj", "{6936B65F-E5D3-4485-8E41-53C62B1A67B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.PC.HealthService", "Lstech.PC.HealthService\Lstech.PC.HealthService.csproj", "{D7CF01B5-A8E7-4BF7-A938-027A8DF8CF1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.PC.HealthService", "Lstech.PC.HealthService\Lstech.PC.HealthService.csproj", "{D7CF01B5-A8E7-4BF7-A938-027A8DF8CF1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.Mobile.HealthService", "Lstech.Mobile.HealthService\Lstech.Mobile.HealthService.csproj", "{3A5B72D7-213E-42FE-91A6-FCE7C3B84B25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.Mobile.HealthService", "Lstech.Mobile.HealthService\Lstech.Mobile.HealthService.csproj", "{3A5B72D7-213E-42FE-91A6-FCE7C3B84B25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.PC.IHealthService", "Lstech.PC.IHealthService\Lstech.PC.IHealthService.csproj", "{93D77972-223C-4CB2-98D9-973F24446047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.PC.IHealthService", "Lstech.PC.IHealthService\Lstech.PC.IHealthService.csproj", "{93D77972-223C-4CB2-98D9-973F24446047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.Mobile.IHealthService", "Lstech.Mobile.IHealthService\Lstech.Mobile.IHealthService.csproj", "{21461342-3CCD-40D3-B581-5C26A1ACF0A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.Mobile.IHealthService", "Lstech.Mobile.IHealthService\Lstech.Mobile.IHealthService.csproj", "{21461342-3CCD-40D3-B581-5C26A1ACF0A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.PC.HealthManager", "Lstech.PC.HealthManager\Lstech.PC.HealthManager.csproj", "{33DCE507-DE35-427C-863F-1DB80F309AC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.PC.HealthManager", "Lstech.PC.HealthManager\Lstech.PC.HealthManager.csproj", "{33DCE507-DE35-427C-863F-1DB80F309AC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.PC.IHealthManager", "Lstech.PC.IHealthManager\Lstech.PC.IHealthManager.csproj", "{5F9744E2-FD2F-4C64-9AD2-82D1129C8660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.PC.IHealthManager", "Lstech.PC.IHealthManager\Lstech.PC.IHealthManager.csproj", "{5F9744E2-FD2F-4C64-9AD2-82D1129C8660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.Mobile.HealthManager", "Lstech.Mobile.HealthManager\Lstech.Mobile.HealthManager.csproj", "{675EAA92-18C3-46C5-8844-96F356CF1289}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.Mobile.HealthManager", "Lstech.Mobile.HealthManager\Lstech.Mobile.HealthManager.csproj", "{675EAA92-18C3-46C5-8844-96F356CF1289}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.Mobile.IHealthManager", "Lstech.Mobile.IHealthManager\Lstech.Mobile.IHealthManager.csproj", "{6961E61C-B74F-480F-889F-182A2AE5309E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lstech.Mobile.IHealthManager", "Lstech.Mobile.IHealthManager\Lstech.Mobile.IHealthManager.csproj", "{6961E61C-B74F-480F-889F-182A2AE5309E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.WCFService", "Lstech.WCFService\Lstech.WCFService.csproj", "{B2980517-9DE1-4EAF-8260-A77C2CE6C051}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lstech.IWCFService", "Lstech.IWCFService\Lstech.IWCFService.csproj", "{CD50F4EB-06FE-465E-9402-5CE7A6A8E542}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +153,14 @@ Global
 		{6961E61C-B74F-480F-889F-182A2AE5309E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6961E61C-B74F-480F-889F-182A2AE5309E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6961E61C-B74F-480F-889F-182A2AE5309E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2980517-9DE1-4EAF-8260-A77C2CE6C051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2980517-9DE1-4EAF-8260-A77C2CE6C051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2980517-9DE1-4EAF-8260-A77C2CE6C051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2980517-9DE1-4EAF-8260-A77C2CE6C051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD50F4EB-06FE-465E-9402-5CE7A6A8E542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD50F4EB-06FE-465E-9402-5CE7A6A8E542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD50F4EB-06FE-465E-9402-5CE7A6A8E542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD50F4EB-06FE-465E-9402-5CE7A6A8E542}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,6 +184,8 @@ Global
 		{5F9744E2-FD2F-4C64-9AD2-82D1129C8660} = {639B7410-5BEC-4923-B772-029F83B55381}
 		{675EAA92-18C3-46C5-8844-96F356CF1289} = {639B7410-5BEC-4923-B772-029F83B55381}
 		{6961E61C-B74F-480F-889F-182A2AE5309E} = {639B7410-5BEC-4923-B772-029F83B55381}
+		{B2980517-9DE1-4EAF-8260-A77C2CE6C051} = {C17E5757-2CCA-48FC-A339-AB61D50B7A8B}
+		{CD50F4EB-06FE-465E-9402-5CE7A6A8E542} = {C17E5757-2CCA-48FC-A339-AB61D50B7A8B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {973601E7-BEDD-4E86-AA4D-C27BE33376B7}
