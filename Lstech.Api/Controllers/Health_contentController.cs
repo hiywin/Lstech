@@ -8,6 +8,8 @@ using Lstech.Mobile.IHealthManager;
 using Lstech.Models.Health;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Lstech.Api.Controllers
 {
@@ -22,16 +24,27 @@ namespace Lstech.Api.Controllers
         }
 
         [HttpPost, Route("add_HealthContentInfo")]
-        public async Task<IActionResult> InsertHealthContentInfo(AddHealthContentModel model)
+        public async Task<IActionResult> InsertHealthContentInfo(AddHealthTitleJsonStr jsonObj)
         {
+            List<AddHealthContentModel> contentList = jsonObj.TitleJsonStr;
+            string answerStr = "";
+            if (contentList.Count > 0)
+            {
+                foreach (var item in contentList)
+                {
+                    string str = item.Content + ":" + item.Answer;
+                    str += ";";
+                    answerStr += str;
+                }
+            }
             var condition = new Health_content_Model();
-            condition.TitleId = model.TitleId;
-            condition.Answer = model.Answer;
-            condition.ContentId = model.ContentId;
-            condition.CreateTime = model.CreateTime;
-            condition.Creator = model.Creator;
-            condition.TitleType = model.TitleType;
-            condition.CreateName = model.CreateName;
+            condition.TitleId = Guid.NewGuid().ToString("N");
+            condition.Answer = answerStr;
+            condition.ContentId = Guid.NewGuid().ToString();
+            condition.CreateTime = contentList[0].CreateTime;
+            condition.Creator = contentList[0].Creator;
+            condition.TitleType = contentList[0].TitleType;
+            condition.CreateName = contentList[0].CreateName;
 
             var query = new QueryData<Health_content_Model>();
             query.Criteria = condition;

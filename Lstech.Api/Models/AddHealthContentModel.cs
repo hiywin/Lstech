@@ -8,13 +8,17 @@ namespace Lstech.Api.Models
     public class AddHealthContentModel
     {
         /// <summary>
+        /// 名称
+        /// </summary>
+        public string Content { get; set; }
+        /// <summary>
         /// 内容guid
         /// </summary>
         public string ContentId { get; set; }
         /// <summary>
         /// health_title的TitleId
         /// </summary>
-        public string TitleId { get; set; }
+        public string titleId { get; set; }
         /// <summary>
         /// 类型
         /// </summary>

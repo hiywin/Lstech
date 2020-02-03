@@ -7,6 +7,10 @@ namespace Lstech.Models.Health
 {
     public class HealthTitle: IHealthTitle
     {
+        public HealthTitle()
+        {
+            LstSubTitle = new List<HealthTitle>();
+        }
         public int Id { get; set; }
         public string TitleId { get; set; }
         public string Content { get; set; }
@@ -19,5 +23,7 @@ namespace Lstech.Models.Health
         public DateTime? UpdateTime { get; set; }
         public int Sort { get; set; }
         public bool? IsShow { get; set; }
+
+        public List<HealthTitle> LstSubTitle { get; set; }
     }
 }

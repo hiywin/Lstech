@@ -55,5 +55,26 @@ namespace Lstech.Api.Controllers
 
             return Ok(result);
         }
+
+        [Authorize, HttpPost, Route("health_content_export")]
+        public async Task<IActionResult> HealthContentExport(HealthContentQueryViewModel model)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    Answer = model.Answer,
+                    Creator = model.Creator
+                },
+                PageModel = model.PageModel
+            };
+            var result = await _manager.HealthContentExcelExportAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
     }
 }

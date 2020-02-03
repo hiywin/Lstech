@@ -11,6 +11,6 @@ namespace Lstech.Mobile.IHealthManager
         /// 获取全部体检内容表头接口定义
         /// </summary>
         /// <returns></returns>
-        Task<ListResult<Health_title_Model>> GetHealthTitleAllAsync();
+        Task<ListResult<Health_title_List_Model>> GetHealthTitleAllAsync();
     }
 }

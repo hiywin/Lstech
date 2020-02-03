@@ -14,5 +14,7 @@ namespace Lstech.Mobile.IHealthService
     public interface IHealth_titleService
     {
         Task<DataResult<List<IHealth_title_Model>>> GetAllHealthTitle(QueryData<GetAllHealthTitleQuery> query);
+
+        Task<DataResult<List<IHealth_title_Model>>> GetSubHealthTitle(QueryData<GetSubHealthTitleQuery> query);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Common.Helpers;
 using Lstech.Entities.Health;
 using Lstech.PC.IHealthManager;
 using Lstech.PC.IHealthService.Structs;
@@ -81,9 +82,9 @@ namespace Lstech.PC.HealthManager
                 #region 创建动态Table
                 
                 var table = new DataTable();
-                table.Columns.Add("工号", Type.GetType("System.String"));
-                table.Columns.Add("姓名", Type.GetType("System.String"));
-                table.Columns.Add("时间", Type.GetType("System.DateTime"));
+                table.Columns.Add("填写人工号", Type.GetType("System.String"));
+                table.Columns.Add("填写人姓名", Type.GetType("System.String"));
+                table.Columns.Add("填写时间", Type.GetType("System.DateTime"));
                 foreach (var column in lstTitle)
                 {
                     table.Columns.Add(column, Type.GetType("System.String"));
@@ -95,9 +96,9 @@ namespace Lstech.PC.HealthManager
                 foreach (var item in res.Data)
                 {
                     DataRow row = table.NewRow();
-                    row["工号"] = item.Creator;
-                    row["姓名"] = item.CreateName;
-                    row["时间"] = item.CreateTime;
+                    row["填写人工号"] = item.Creator;
+                    row["填写人姓名"] = item.CreateName;
+                    row["填写时间"] = item.CreateTime;
 
                     var answer = item.Answer;
                     var anArray = answer.Split(';');
@@ -123,6 +124,29 @@ namespace Lstech.PC.HealthManager
 
             lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return lr;
+        }
+
+        public async Task<ErrData<byte[]>> HealthContentExcelExportAsync(QueryData<HealthContentQuery> query)
+        {
+            var result = new ErrData<byte[]>();
+            var dt = DateTime.Now;
+
+            var table = await GetHealthContentPageAsyncEx(query);
+            if (table.HasErr)
+            {
+                result.SetInfo(table.Msg, table.Code);
+            }
+            else
+            {
+                result.Data = EPPlusHelper.ExcelExport("体检表", table.Results[0]);
+                if (result.Data == null || result.Data.Length == 0)
+                {
+                    result.SetInfo("无数据导出！", -102);
+                }
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
         }
     }
 }

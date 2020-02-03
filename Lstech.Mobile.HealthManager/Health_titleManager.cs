@@ -4,6 +4,7 @@ using Lstech.Mobile.IHealthService.Structs;
 using Lstech.Models.Health;
 using Lstech.Utility;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Lstech.Mobile.HealthManager
@@ -14,9 +15,9 @@ namespace Lstech.Mobile.HealthManager
         /// 获取所有体检内容表头
         /// </summary>
         /// <returns></returns>
-        public async Task<ListResult<Health_title_Model>> GetHealthTitleAllAsync()
+        public async Task<ListResult<Health_title_List_Model>> GetHealthTitleAllAsync()
         {
-            var lr = new ListResult<Health_title_Model>();
+            var lr = new ListResult<Health_title_List_Model>();
             var dt = DateTime.Now;
 
             var queryEx = new QueryData<GetAllHealthTitleQuery>()
@@ -26,7 +27,7 @@ namespace Lstech.Mobile.HealthManager
                     IsShow = true
                 }
             };
-            var res = await HealthMobileOperaters.HealthTitleOperater.GetAllHealthTitle(queryEx);
+            var res = await HealthMobileOperaters.HealthTitleOperater.GetAllHealthTitle(queryEx);  ///获取所有体检内容表头
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -35,7 +36,7 @@ namespace Lstech.Mobile.HealthManager
             {
                 foreach (var item in res.Data)
                 {
-                    var info = new Health_title_Model();
+                    var info = new Health_title_List_Model();
                     info.Id = item.Id;
                     info.IsMustFill = item.IsMustFill;
                     info.IsShow = item.IsShow;
@@ -48,6 +49,45 @@ namespace Lstech.Mobile.HealthManager
                     info.Content = item.Content;
                     info.CreateTime = item.CreateTime;
                     info.Creator = item.Creator;
+                    var querySub = new QueryData<GetSubHealthTitleQuery>()
+                    {
+                        Criteria = new GetSubHealthTitleQuery()
+                        {
+                            IsShow = true,
+                            ParentId = item.TitleId
+                        }
+                    };
+                    var resSub = await HealthMobileOperaters.HealthTitleOperater.GetSubHealthTitle(querySub);  //获取所有体检内容表子选项
+                    if (resSub.HasErr)
+                    {
+                        lr.SetInfo(resSub.ErrMsg, resSub.ErrCode);
+                    }
+                    else
+                    {
+                        List<Health_title_Model> listTitle = null;
+                        if (resSub.Data.Count > 0)
+                        {
+                            listTitle = new List<Health_title_Model>();
+                            foreach (var titles in resSub.Data)
+                            {
+                                Health_title_Model healthTitle = new Health_title_Model();
+                                healthTitle.Content = titles.Content;
+                                healthTitle.CreateTime = titles.CreateTime;
+                                healthTitle.Creator = titles.Creator;
+                                healthTitle.Id = titles.Id;
+                                healthTitle.IsMustFill = titles.IsMustFill;
+                                healthTitle.IsShow = titles.IsShow;
+                                healthTitle.ParentId = titles.ParentId;
+                                healthTitle.Sort = titles.Sort;
+                                healthTitle.TitleId = titles.TitleId;
+                                healthTitle.Type = titles.Type;
+                                healthTitle.UpdateTime = titles.UpdateTime;
+                                healthTitle.Updator = titles.Updator;
+                                listTitle.Add(healthTitle);
+                            }
+                            info.healthTitleList = listTitle;
+                        }
+                    }
                     lr.Results.Add(info);
                 }
                 lr.SetInfo("成功", 200);
