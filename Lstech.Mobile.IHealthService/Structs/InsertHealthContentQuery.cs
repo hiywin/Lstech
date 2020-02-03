@@ -13,7 +13,7 @@ namespace Lstech.Mobile.IHealthService.Structs
         /// <summary>
         /// health_title的TitleId
         /// </summary>
-        public string TitleId { get; set; }
+        public string titleId { get; set; }
         /// <summary>
         /// 类型
         /// </summary>

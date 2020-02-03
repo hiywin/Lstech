@@ -27,7 +27,7 @@ namespace Lstech.Mobile.HealthService
         {
             var lr = new DataResult<List<IHealth_title_Model>>();
 
-            string condition = @" where 1=1 and ParentId is null or ParentId = '' ";
+            string condition = @" where 1=1 and ParentId is null or ParentId = '' "; 
             condition += query.Criteria.IsShow == null ? string.Empty : string.Format(" and IsShow = '{0}' ", query.Criteria.IsShow);
             string sql = "SELECT [Id],[TitleId],[Content],[Type],[IsMustFill],[ParentId],[Creator] ,[CreateTime],[Updator],[UpdateTime],[Sort],[IsShow] " +
                 "from health_title"

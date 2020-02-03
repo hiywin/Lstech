@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Entities.Health;
 using Lstech.Mobile.IHealthService.Structs;
 using System;
 using System.Collections.Generic;
@@ -18,5 +19,15 @@ namespace Lstech.Mobile.IHealthService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<int>> InsertHealthContent(QueryData<InsertHealthContentQuery> query);
+
+
+        /// <summary>
+        /// 统计组员填写次数
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealth_staff_Model>>> GetHealthStaffCount(QueryData<GetHealthStaffCountQuery> query);
+
+
     }
 }

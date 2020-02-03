@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Lstech.Api.Models;
 using Lstech.Common.Data;
 using Lstech.Mobile.IHealthManager;
+using Lstech.Mobile.IHealthService.Structs;
 using Lstech.Models.Health;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,22 @@ namespace Lstech.Api.Controllers
             query.Criteria = condition;
 
             var result = await _manager.InsertHealthContentMaAsync(query);
+
+            return Ok(result);
+        }
+
+
+        [HttpPost, Route("get_HealthStaffCount")]
+        public async Task<IActionResult> GetHealthStaffCount(GetHealthStaffCountModel model)
+        {
+            var condition = new GetHealthStaffCountQuery();
+            condition.date = model.date;
+            condition.userNo = model.userNo;
+
+            var query = new QueryData<GetHealthStaffCountQuery>();
+            query.Criteria = condition;
+
+            var result = await _manager.GetHealthStaffCountAsync(query);
 
             return Ok(result);
         }

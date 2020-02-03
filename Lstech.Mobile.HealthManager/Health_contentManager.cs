@@ -12,6 +12,50 @@ namespace Lstech.Mobile.HealthManager
 {
     public class Health_contentManager : IHealth_contentManager
     {
+        /// <summary>
+        /// 组长查看组员填写
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<GetHealthStaffCountQuery> query)
+        {
+            var lr = new ListResult<List<Health_staff_Model>>();
+            List<Health_staff_Model> health_Staffs = null;
+            var dt = DateTime.Now;
+
+            var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(query);  ///获取组员填写次数
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else 
+            {
+                if (res.Data.Count > 0)
+                {
+                    health_Staffs = new List<Health_staff_Model>();
+                    foreach (var item in res.Data)
+                    {
+                        Health_staff_Model staff_Model = new Health_staff_Model();
+                        staff_Model.StaffNo = item.StaffNo;
+                        staff_Model.STAFFName = item.STAFFName;
+                        staff_Model.iswrite = item.iswrite;
+                        health_Staffs.Add(staff_Model);
+                    }
+                }
+                lr.Data = health_Staffs;
+                lr.SetInfo("成功", 200);
+            }
+    
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
+        }
+
+
+        /// <summary>
+        /// 提交体检内容详细信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         public async Task<ErrData<bool>> InsertHealthContentMaAsync(QueryData<Health_content_Model> query)
         {
             var result = new ErrData<bool>();
@@ -24,7 +68,7 @@ namespace Lstech.Mobile.HealthManager
                 contentQuery.CreateName = query.Criteria.CreateName;
                 contentQuery.CreateTime = query.Criteria.CreateTime;
                 contentQuery.Creator = query.Criteria.Creator;
-                contentQuery.TitleId = query.Criteria.TitleId;
+                contentQuery.titleId = query.Criteria.TitleId;
                 contentQuery.TitleType = query.Criteria.TitleType;
 
 
