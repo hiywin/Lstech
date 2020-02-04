@@ -1,5 +1,4 @@
 ﻿using Lstech.Common.Data;
-using Lstech.Mobile.IHealthService.Structs;
 using Lstech.Models.Health;
 using System;
 using System.Collections.Generic;
@@ -22,6 +21,6 @@ namespace Lstech.Mobile.IHealthManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<GetHealthStaffCountQuery> query);
+        Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query);
     }
 }

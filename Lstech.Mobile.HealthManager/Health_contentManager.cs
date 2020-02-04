@@ -17,18 +17,25 @@ namespace Lstech.Mobile.HealthManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<GetHealthStaffCountQuery> query)
+        public async Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query)
         {
             var lr = new ListResult<List<Health_staff_Model>>();
             List<Health_staff_Model> health_Staffs = null;
             var dt = DateTime.Now;
 
-            var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(query);  ///获取组员填写次数
+            var queryCt = new GetHealthStaffCountQuery();
+            queryCt.date = query.Criteria.date;
+            queryCt.userNo = query.Criteria.userNo;
+
+            var queryHs = new QueryData<GetHealthStaffCountQuery>();
+            queryHs.Criteria = queryCt;
+
+            var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryHs);  ///获取组员填写次数
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
             }
-            else 
+            else
             {
                 if (res.Data.Count > 0)
                 {
@@ -45,7 +52,7 @@ namespace Lstech.Mobile.HealthManager
                 lr.Data = health_Staffs;
                 lr.SetInfo("成功", 200);
             }
-    
+
             lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return lr;
         }

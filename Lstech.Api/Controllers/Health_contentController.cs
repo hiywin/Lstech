@@ -59,11 +59,11 @@ namespace Lstech.Api.Controllers
         [HttpPost, Route("get_HealthStaffCount")]
         public async Task<IActionResult> GetHealthStaffCount(GetHealthStaffCountModel model)
         {
-            var condition = new GetHealthStaffCountQuery();
+            var condition = new HealthStaffCountQuery_Model();
             condition.date = model.date;
             condition.userNo = model.userNo;
 
-            var query = new QueryData<GetHealthStaffCountQuery>();
+            var query = new QueryData<HealthStaffCountQuery_Model>();
             query.Criteria = condition;
 
             var result = await _manager.GetHealthStaffCountAsync(query);
