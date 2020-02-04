@@ -65,6 +65,7 @@ namespace Lstech.Api.Controllers
 
             var query = new QueryData<HealthStaffCountQuery_Model>();
             query.Criteria = condition;
+            query.PageModel = model.PageModel;
 
             var result = await _manager.GetHealthStaffCountAsync(query);
 

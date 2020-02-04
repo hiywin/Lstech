@@ -29,7 +29,7 @@ namespace Lstech.Mobile.HealthManager
 
             var queryHs = new QueryData<GetHealthStaffCountQuery>();
             queryHs.Criteria = queryCt;
-
+            queryHs.PageModel = query.PageModel;
             var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryHs);  ///获取组员填写次数
             if (res.HasErr)
             {
@@ -50,6 +50,7 @@ namespace Lstech.Mobile.HealthManager
                     }
                 }
                 lr.Data = health_Staffs;
+                lr.PageModel = res.PageInfo;
                 lr.SetInfo("成功", 200);
             }
 

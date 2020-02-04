@@ -89,5 +89,25 @@ namespace Lstech.Api.Controllers
 
             return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
         }
+
+        [HttpGet, Route("health_content_export_all")]
+        public async Task<IActionResult> HealthContentExportAll(DateTime? starTime,DateTime? endTime)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    StarTime = starTime,
+                    EndTime = endTime
+                }
+            };
+            var result = await _manager.HealthContentExcelExportAllAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
     }
 }

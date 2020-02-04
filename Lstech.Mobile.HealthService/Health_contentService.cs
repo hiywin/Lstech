@@ -34,8 +34,9 @@ namespace Lstech.Mobile.HealthService
             {
                 try
                 {
-                    var modelList = await MssqlHelper.QueryListAsync<Health_staff_Model>(dbConn, sql);
+                    var modelList = await MssqlHelper.QueryPageAsync<Health_staff_Model>(dbConn, "staffNo asc", sql, query.PageModel);
                     lr.Data = modelList.ToList<IHealth_staff_Model>();
+                    lr.PageInfo = query.PageModel;
                 }
                 catch (Exception ex)
                 {

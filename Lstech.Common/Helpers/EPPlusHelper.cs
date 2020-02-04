@@ -54,5 +54,55 @@ namespace Lstech.Common.Helpers
             }
             return fileContents;
         }
+
+        /// <summary>
+        /// 单个excel导出多个sheet
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <param name="dictable"></param>
+        /// <returns></returns>
+        public static byte[] ExcelExport(Dictionary<string, DataTable> dicTable)
+        {
+            var codes = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+            byte[] fileContents;
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage())
+                {
+                    foreach (var item in dicTable)
+                    {
+                        //获取表的列名
+                        var titles = new List<string>();
+                        foreach (DataColumn col in item.Value.Columns)
+                        {
+                            titles.Add(col.ColumnName);
+                        }
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(item.Key);
+
+                        for (int i = 0; i < titles.Count; i++)
+                        {
+                            worksheet.Cells[1, i + 1].Value = titles[i];
+                        }
+
+                        for (int j = 0; j < item.Value.Rows.Count; j++)
+                        {
+                            DataRow row = item.Value.Rows[j];
+                            for (int k = 0; k < titles.Count; k++)
+                            {
+                                worksheet.Cells[codes[k] + (j + 2)].Value = row[k];
+                            }
+
+                        }
+                    }
+
+                    fileContents = package.GetAsByteArray();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return fileContents;
+        }
     }
 }
