@@ -12,6 +12,31 @@ namespace Lstech.WCFService
 {
     public class TlgChinaWebService : ITlgChinaWebService
     {
+        /// <summary>
+        /// 获取DD用户信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<DataResult<string>> GetDDUserInfoAsync(QueryData<WebServiceDDQuery> query)
+        {
+            var result = new DataResult<string>();
+            try
+            {
+                using (var chnl = WcfInvoke.CreateWCFChannel<lytechWebServiceSoap>(WcfInvoke.TlgChinaServiceUrl))
+                {
+                    var proxy = chnl.CreateChannel();
+                    result.Data = await proxy.GetUserInfoAndLastApprAsync(query.Criteria.code, query.Criteria.ProcessCode, query.Criteria.corpid);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.SetErr(ex, -500);
+                result.Data = string.Empty;
+            }
+
+            return result;
+        }
+
         public async Task<DataResult<string>> GetUserADGuidAsync(QueryData<WcfADUserGuidQuery> query)
         {
             var result = new DataResult<string>();

@@ -27,6 +27,7 @@ namespace Lstech.PC.HealthService
                   ,[AdAccount]
                   ,[Creator]
                   ,[CreateTime]
+                  ,[IsAdmin]
               FROM [dbo].[health_user] {0}", condition);
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {

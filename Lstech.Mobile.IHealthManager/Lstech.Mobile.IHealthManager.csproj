@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lstech.Common\Lstech.Common.csproj" />
+    <ProjectReference Include="..\Lstech.IWCFService\Lstech.IWCFService.csproj" />
     <ProjectReference Include="..\Lstech.Mobile.IHealthService\Lstech.Mobile.IHealthService.csproj" />
     <ProjectReference Include="..\Lstech.Models\Lstech.Models.csproj" />
   </ItemGroup>

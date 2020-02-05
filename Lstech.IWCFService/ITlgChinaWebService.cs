@@ -15,5 +15,8 @@ namespace Lstech.IWCFService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<string>> GetUserADGuidAsync(QueryData<WcfADUserGuidQuery> query);
+
+
+        Task<DataResult<string>> GetDDUserInfoAsync(QueryData<WebServiceDDQuery> query);
     }
 }

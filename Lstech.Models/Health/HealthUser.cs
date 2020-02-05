@@ -13,5 +13,6 @@ namespace Lstech.Models.Health
         public string AdAccount { get; set; }
         public string Creator { get; set; }
         public DateTime CreateTime { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

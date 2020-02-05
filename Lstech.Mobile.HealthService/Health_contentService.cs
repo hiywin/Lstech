@@ -27,9 +27,14 @@ namespace Lstech.Mobile.HealthService
         {
             var lr = new DataResult<List<IHealth_staff_Model>>();
 
-            string sql = string.Format(@"select staff.StaffNo,staff.STAFFName,case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff left join health_content content on content.Creator=staff.StaffNo where 
-(CONVERT(varchar(100), content.CreateTime, 23)  ='{0}' or content.CreateTime is null)  and 
-  (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
+//            string sql = string.Format(@"select distinct staff.StaffNo,staff.STAFFName,case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff left join health_content content on content.Creator=staff.StaffNo where 
+//(CONVERT(varchar(100), content.CreateTime, 23)  ='{0}' or content.CreateTime is null)  and 
+//  (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
+            string sql = string.Format(@"select distinct  staff.StaffNo,staff.STAFFName,
+                case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff 
+                left join (select * from  health_content  where (CONVERT(varchar(100), CreateTime, 23)  ='{0}'or CreateTime is null) ) as content on content.Creator=staff.StaffNo
+                where   
+                (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
                 try

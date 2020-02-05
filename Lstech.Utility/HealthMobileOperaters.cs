@@ -1,5 +1,7 @@
-﻿using Lstech.Mobile.HealthService;
+﻿using Lstech.IWCFService;
+using Lstech.Mobile.HealthService;
 using Lstech.Mobile.IHealthService;
+using Lstech.WCFService;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +19,9 @@ namespace Lstech.Utility
 
             if (!dic.ContainsKey("IHealth_contentService"))
                 dic.Add("IHealth_contentService", null);
+
+            if (!dic.ContainsKey("ITlgChinaWebService"))
+                dic.Add("ITlgChinaWebService", null);
 
             return true;
         }
@@ -52,6 +57,20 @@ namespace Lstech.Utility
                 svr = new Health_contentService();
 
                 dic["IHealth_contentService"] = svr;
+                return svr;
+            }
+        }
+
+        public static ITlgChinaWebService TlgChinaWebServiceOperater
+        {
+            get
+            {
+                var svr = dic["ITlgChinaWebService"] as ITlgChinaWebService;
+                if (svr != null) return svr;
+
+                svr = new TlgChinaWebService();
+
+                dic["ITlgChinaWebService"] = svr;
                 return svr;
             }
         }

@@ -12,5 +12,6 @@ namespace Lstech.Entities.Health
         string AdAccount { get; set; }
         string Creator { get; set; }
         DateTime CreateTime { get; set; }
+        bool IsAdmin { get; set; }
     }
 }
