@@ -11,6 +11,9 @@ namespace Lstech.Api.Models.HealthContent
     {
         public string Answer { get; set; }
         public string Creator { get; set; }
+        public string CreateName { get; set; }
+        public DateTime? StarTime { get; set; }
+        public DateTime? EndTime { get; set; }
         [Required]
         public PageModel PageModel { get; set; }
     }

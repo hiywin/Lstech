@@ -51,6 +51,7 @@ namespace Lstech.Api.Controllers
                 user.UserNo = res.Data.UserNo;
                 user.UserName = res.Data.UserName;
                 user.AdAccount = res.Data.AdAccount;
+                user.IsAdmin = res.Data.IsAdmin;
 
                 var claimsIdentity = _jwtFactory.GenerateClaimsIdentity(user);
                 var tokenJson = await _jwtFactory.GenerateEncodedToken(user.UserNo, claimsIdentity);

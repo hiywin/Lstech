@@ -47,7 +47,11 @@ namespace Lstech.Api.Controllers
                 Criteria = new HealthContentQuery()
                 {
                     Answer = model.Answer,
-                    Creator = model.Creator
+                    Creator = model.Creator,
+                    CreateName = model.CreateName,
+                    StarTime = model.StarTime,
+                    EndTime = model.EndTime,
+                    HrLeaderNo = CurrentUser.IsAdmin ? string.Empty : CurrentUser.UserNo
                 },
                 PageModel = model.PageModel
             };

@@ -8,8 +8,10 @@ namespace Lstech.PC.IHealthService.Structs
     {
         public string Answer { get; set; }
         public string Creator { get; set; }
+        public string CreateName { get; set; }
         public string CommondLeaderNo { get; set; }
         public DateTime? StarTime { get; set; }
         public DateTime? EndTime { get; set; }
+        public string HrLeaderNo { get; set; }
     }
 }

@@ -54,13 +54,24 @@ namespace Lstech.PC.HealthService
 
             string condition = @" where 1=1 ";
             condition += string.IsNullOrEmpty(query.Criteria.Answer) ? string.Empty : string.Format(" and Content like '%{0}%' ", query.Criteria.Answer);
-            condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator like '%{0}%' ", query.Criteria.Creator);
-            string sql = string.Format(@"SELECT 
+            condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator = '{0}' ", query.Criteria.Creator);
+            condition += string.IsNullOrEmpty(query.Criteria.CreateName) ? string.Empty : string.Format(" and CreateName like '%{0}%' ", query.Criteria.CreateName);
+            condition += query.Criteria.StarTime == null ? string.Empty : string.Format(" and CreateTime >= '{0}' ", query.Criteria.StarTime);
+            condition += query.Criteria.EndTime == null ? string.Empty : string.Format(" and CreateTime <= '{0}' ", query.Criteria.EndTime);
+            condition += string.IsNullOrEmpty(query.Criteria.HrLeaderNo) ? string.Empty : string.Format(" and HrLeaderNo = '{0}' ", query.Criteria.HrLeaderNo);
+            //string sql = string.Format(@"SELECT 
+            //    a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName]
+            //    ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
+            //    FROM [dbo].[health_content] a
+            //    LEFT JOIN [dbo].[health_staff] b
+            //    ON a.Creator=b.StaffNo {0}", condition);
+            string sql = string.Format(@"SELECT * FROM (
+                SELECT ROW_NUMBER() OVER ( PARTITION BY [Creator], CONVERT(varchar(100), CreateTime, 23) ORDER BY [CreateTime] DESC ) AS num,
                 a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName]
                 ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
                 FROM [dbo].[health_content] a
                 LEFT JOIN [dbo].[health_staff] b
-                ON a.Creator=b.StaffNo {0}", condition);
+                ON a.Creator=b.StaffNo {0}) as T where num=1 ", condition);
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
                 try
@@ -100,62 +111,6 @@ namespace Lstech.PC.HealthService
                 {
                     var modelList = await MssqlHelper.QueryListAsync<HealthContentStaff>(dbConn, sql);
                     result.Data = modelList.ToList<IHealthContentStaff>();
-                }
-                catch (Exception ex)
-                {
-                    result.SetErr(ex, -500);
-                    result.Data = null;
-                }
-            }
-            return result;
-        }
-
-        public async Task<DataResult<List<IHealthContentMain>>> GetHealthContentMainPageAsync(QueryData<HealthContentMainQuery> query)
-        {
-            var result = new DataResult<List<IHealthContentMain>>();
-
-            string condition = @" where 1=1 ";
-            condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator = '{0}' ", query.Criteria.Creator);
-            string sql = string.Format(@"SELECT [Id]
-                  ,[ContentId]
-                  ,[Creator]
-                  ,[CreateName]
-                  ,[CreateTime]
-              FROM [dbo].[health_content] {0}", condition);
-            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
-            {
-                try
-                {
-                    var modelList = await MssqlHelper.QueryPageAsync<HealthContentMain>(dbConn, "Id asc", sql, query.PageModel);
-                    result.Data = modelList.ToList<IHealthContentMain>();
-                    result.PageInfo = query.PageModel;
-                }
-                catch (Exception ex)
-                {
-                    result.SetErr(ex, -500);
-                    result.Data = null;
-                }
-            }
-            return result;
-        }
-
-        public async Task<DataResult<List<IHealthContentSub>>> GetHealthContentSubAllAsync(QueryData<HealthContentSubQuery> query)
-        {
-            var result = new DataResult<List<IHealthContentSub>>();
-
-            string condition = @" where 1=1 ";
-            condition += string.IsNullOrEmpty(query.Criteria.ContentId) ? string.Empty : string.Format(" and ContentId = '{0}' ", query.Criteria.ContentId);
-            string sql = string.Format(@"SELECT [Id]
-                  ,[ContentId]
-                  ,[TitleId]
-                  ,[Answer]
-              FROM [dbo].[health_content_sub] {0}", condition);
-            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
-            {
-                try
-                {
-                    var modelList = await MssqlHelper.QueryListAsync<HealthContentSub>(dbConn, sql);
-                    result.Data = modelList.ToList<IHealthContentSub>();
                 }
                 catch (Exception ex)
                 {

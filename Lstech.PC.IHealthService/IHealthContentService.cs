@@ -18,7 +18,7 @@ namespace Lstech.PC.IHealthService
         Task<DataResult<List<IHealthContent>>> GetHealthContentPageAsync(QueryData<HealthContentQuery> query);
 
         /// <summary>
-        /// 分页获取内容
+        /// 分页获取内容 - 关联人员结构表
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -30,20 +30,6 @@ namespace Lstech.PC.IHealthService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<List<IHealthContentStaff>>> GetHealthContentStaffAllAsync(QueryData<HealthContentQuery> query);
-
-        /// <summary>
-        /// 查询内容主表
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        Task<DataResult<List<IHealthContentMain>>> GetHealthContentMainPageAsync(QueryData<HealthContentMainQuery> query);
-
-        /// <summary>
-        /// 查询内容子表
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        Task<DataResult<List<IHealthContentSub>>> GetHealthContentSubAllAsync(QueryData<HealthContentSubQuery> query);
 
         /// <summary>
         /// 获取部门总指挥

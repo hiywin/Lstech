@@ -30,5 +30,10 @@ namespace Lstech.Common.Data
         /// EAS权限
         /// </summary>
         public string UnitFid { get; set; }
+
+        /// <summary>
+        /// 是否管理员
+        /// </summary>
+        public bool IsAdmin { get; set; }
     }
 }
