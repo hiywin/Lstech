@@ -113,5 +113,55 @@ namespace Lstech.Api.Controllers
 
             return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
         }
+
+        [Authorize, HttpPost, Route("health_content_export_hr_all")]
+        public async Task<IActionResult> HealthContentExportHrAll(HealthContentExportHrViewModel model)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    StarTime = model.StarTime,
+                    EndTime = model.EndTime
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    IsAdmin = CurrentUser.IsAdmin
+                }
+            };
+            var result = await _manager.HealthContentExcelExportHrAllAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
+
+        [HttpGet, Route("health_content_export_hr_get")]
+        public async Task<IActionResult> HealthContentExportHrGet(string userNo, DateTime? starTime, DateTime? endTime)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    StarTime = starTime,
+                    EndTime = endTime
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = userNo,
+                    IsAdmin = true
+                }
+            };
+            var result = await _manager.HealthContentExcelExportHrAllAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
     }
 }

@@ -8,5 +8,7 @@ namespace Lstech.PC.IHealthService.Structs
     {
         public string CommandLeader { get; set; }
         public string CommondLeaderNo { get; set; }
+        public string HrLeader { get; set; }
+        public string HrLeaderNo { get; set; }
     }
 }
