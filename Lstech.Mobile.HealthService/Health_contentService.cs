@@ -19,7 +19,7 @@ namespace Lstech.Mobile.HealthService
     public class Health_contentService : IHealth_contentService
     {
         /// <summary>
-        /// 组长查看组员填写
+        /// 组长查看组员填写（分页）
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -39,7 +39,37 @@ namespace Lstech.Mobile.HealthService
             {
                 try
                 {
-                    var modelList = await MssqlHelper.QueryPageAsync<Health_staff_Model>(dbConn, "staffNo asc", sql, query.PageModel);
+                    var modelList = await MssqlHelper.QueryPageAsync<Health_staff_Model>(dbConn, "iswrite asc", sql, query.PageModel);
+                    lr.Data = modelList.ToList<IHealth_staff_Model>();
+                    lr.PageInfo = query.PageModel;
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -101);
+                    lr.Data = null;
+                }
+            }
+            return lr;
+        }
+
+        /// <summary>
+        /// 获取所有组员填写
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<DataResult<List<IHealth_staff_Model>>> GetHealthStaffCount_All(QueryData<GetHealthStaffCountQuery> query)
+        {
+            var lr = new DataResult<List<IHealth_staff_Model>>();
+            string sql = string.Format(@"select distinct  staff.StaffNo,staff.STAFFName,
+                case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff 
+                left join (select * from  health_content  where (CONVERT(varchar(100), CreateTime, 23)  ='{0}'or CreateTime is null) ) as content on content.Creator=staff.StaffNo
+                where   
+                (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
+            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                try
+                {
+                    var modelList = await MssqlHelper.QueryListAsync<Health_staff_Model>(dbConn, sql, "iswrite asc");
                     lr.Data = modelList.ToList<IHealth_staff_Model>();
                     lr.PageInfo = query.PageModel;
                 }

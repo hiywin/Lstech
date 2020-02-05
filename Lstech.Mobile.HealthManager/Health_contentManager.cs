@@ -17,16 +17,54 @@ namespace Lstech.Mobile.HealthManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<ListResult<List<Health_staff_Model>>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query)
+        public async Task<ListResult<GroupLeaderViewHealthModel>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query)
         {
-            var lr = new ListResult<List<Health_staff_Model>>();
+            var lr = new ListResult<GroupLeaderViewHealthModel>();
             List<Health_staff_Model> health_Staffs = null;
+            GroupLeaderViewHealthModel healthModel = null;
             var dt = DateTime.Now;
 
             var queryCt = new GetHealthStaffCountQuery();
             queryCt.date = query.Criteria.date;
             queryCt.userNo = query.Criteria.userNo;
 
+            //先获取本组所有组员填写信息（统计本组未填写数量）
+            var queryAll = new QueryData<GetHealthStaffCountQuery>();
+            PageModel page = new PageModel();
+            page.PageIndex = 1;
+            page.PageSize = 1000;
+
+            queryAll.Criteria = queryCt;
+            queryAll.PageModel = page;
+            var resAll = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryAll);  ///获取组员填写次数
+            if (resAll.HasErr)
+            {
+                lr.SetInfo(resAll.ErrMsg, resAll.ErrCode);
+                return lr;
+            }
+            else
+            {
+                healthModel = new GroupLeaderViewHealthModel();
+                int totalCt = 0;
+                int wtxCT = 0;
+                if (resAll.Data.Count > 0)
+                {
+                    totalCt = resAll.Data.Count;
+                    foreach (var itemA in resAll.Data)
+                    {
+                        if (itemA.iswrite == "0")
+                        {
+                            wtxCT += 1;
+                        }
+                    }
+                    healthModel.NotFilledCount = wtxCT;
+                    healthModel.TotalCount = totalCt;
+                }
+            }
+
+
+
+            //获取组员填写（分页）
             var queryHs = new QueryData<GetHealthStaffCountQuery>();
             queryHs.Criteria = queryCt;
             queryHs.PageModel = query.PageModel;
@@ -49,7 +87,8 @@ namespace Lstech.Mobile.HealthManager
                         health_Staffs.Add(staff_Model);
                     }
                 }
-                lr.Data = health_Staffs;
+                healthModel.health_Staffs = health_Staffs;
+                lr.Data = healthModel;
                 lr.PageModel = res.PageInfo;
                 lr.SetInfo("成功", 200);
             }

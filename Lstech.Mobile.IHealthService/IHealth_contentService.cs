@@ -28,6 +28,13 @@ namespace Lstech.Mobile.IHealthService
         /// <returns></returns>
         Task<DataResult<List<IHealth_staff_Model>>> GetHealthStaffCount(QueryData<GetHealthStaffCountQuery> query);
 
+        /// <summary>
+        /// 获取所有组员填写
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealth_staff_Model>>> GetHealthStaffCount_All(QueryData<GetHealthStaffCountQuery> query);
+
 
     }
 }

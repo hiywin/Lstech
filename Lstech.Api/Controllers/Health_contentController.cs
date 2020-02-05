@@ -42,7 +42,7 @@ namespace Lstech.Api.Controllers
             condition.TitleId = Guid.NewGuid().ToString("N");
             condition.Answer = answerStr;
             condition.ContentId = Guid.NewGuid().ToString();
-            condition.CreateTime = contentList[0].CreateTime;
+            condition.CreateTime = DateTime.Now;
             condition.Creator = contentList[0].Creator;
             condition.TitleType = contentList[0].TitleType;
             condition.CreateName = contentList[0].CreateName;
