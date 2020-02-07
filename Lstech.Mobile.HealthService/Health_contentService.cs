@@ -19,6 +19,35 @@ namespace Lstech.Mobile.HealthService
     public class Health_contentService : IHealth_contentService
     {
         /// <summary>
+        /// 根据工号和日期获取体检填写内容
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<DataResult<List<IHealth_content_Model>>> GetHealthContentDetailsInfoByNoAndDate(QueryData<GetHealthStaffCountQuery> query)
+        {
+            var lr = new DataResult<List<IHealth_content_Model>>();
+            string condition = @" where 1=1 ";
+            condition += string.IsNullOrEmpty(query.Criteria.date) ? string.Empty : string.Format(" and CONVERT(varchar(10), CreateTime, 120) = '{0}' ", query.Criteria.date);
+            condition += string.IsNullOrEmpty(query.Criteria.userNo) ? string.Empty : string.Format(" and Creator = '{0}' ", query.Criteria.userNo);
+            string sql = string.Format(@"SELECT Top 1 [Id],[ContentId],[titleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName],[IsPass],[NotPassReson] FROM [dbo].[health_content] " + condition);
+            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                try
+                {
+                    var modelList = await MssqlHelper.QueryListAsync<Health_content_Model>(dbConn, sql, "CreateTime desc");
+                    lr.Data = modelList.ToList<IHealth_content_Model>();
+                    lr.PageInfo = query.PageModel;
+                }
+                catch (Exception ex)
+                {
+                    lr.SetErr(ex, -500);
+                    lr.Data = null;
+                }
+            }
+            return lr;
+        }
+
+        /// <summary>
         /// 组长查看组员填写（分页）
         /// </summary>
         /// <param name="query"></param>
@@ -27,9 +56,9 @@ namespace Lstech.Mobile.HealthService
         {
             var lr = new DataResult<List<IHealth_staff_Model>>();
 
-//            string sql = string.Format(@"select distinct staff.StaffNo,staff.STAFFName,case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff left join health_content content on content.Creator=staff.StaffNo where 
-//(CONVERT(varchar(100), content.CreateTime, 23)  ='{0}' or content.CreateTime is null)  and 
-//  (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
+            //            string sql = string.Format(@"select distinct staff.StaffNo,staff.STAFFName,case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff left join health_content content on content.Creator=staff.StaffNo where 
+            //(CONVERT(varchar(100), content.CreateTime, 23)  ='{0}' or content.CreateTime is null)  and 
+            //  (staff.GroupLeaderNo='{1}' or AggLeaderNo='{1}' or CommondLeaderNo='{1}' or HrLeaderNo='{1}')", query.Criteria.date, query.Criteria.userNo);
             string sql = string.Format(@"select distinct  staff.StaffNo,staff.STAFFName,
                 case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite from health_staff staff 
                 left join (select * from  health_content  where (CONVERT(varchar(100), CreateTime, 23)  ='{0}'or CreateTime is null) ) as content on content.Creator=staff.StaffNo

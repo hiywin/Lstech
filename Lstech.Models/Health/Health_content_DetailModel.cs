@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lstech.Mobile.IHealthService.Structs
+namespace Lstech.Models.Health
 {
-    public class InsertHealthContentQuery
+    public class Health_content_DetailModel
     {
+        /// <summary>
+        /// 名称
+        /// </summary>
+        public string Content { get; set; }
         /// <summary>
         /// 内容guid
         /// </summary>
@@ -34,13 +38,5 @@ namespace Lstech.Mobile.IHealthService.Structs
         /// 创建人姓名
         /// </summary>
         public string CreateName { get; set; }
-        /// <summary>
-        ///是否通过
-        /// </summary>
-        public bool? IsPass { get; set; }
-        /// <summary>
-        /// 不通过原因
-        /// </summary>
-        public string NotPassReson { get; set; }
     }
 }

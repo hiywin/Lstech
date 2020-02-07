@@ -234,5 +234,26 @@ namespace Lstech.Api.Controllers
             }
             return returnToFactory;
         }
+
+
+        /// <summary>
+        /// 根据工号和日期获取体检填写详情
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost, Route("get_HealthContentDetail")]
+        public async Task<IActionResult> GetHealthContentDetail(GetHealthContentDetailModel model)
+        {
+            var condition = new HealthStaffCountQuery_Model();
+            condition.date = model.Date;
+            condition.userNo = model.StaffNo;
+
+            var query = new QueryData<HealthStaffCountQuery_Model>();
+            query.Criteria = condition;
+
+            var result = await _manager.GetHealthContentDetailInfoAsync(query);
+
+            return Ok(result);
+        }
     }
 }

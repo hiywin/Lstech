@@ -22,5 +22,12 @@ namespace Lstech.Mobile.IHealthManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ListResult<GroupLeaderViewHealthModel>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query);
+
+        /// <summary>
+        /// 根据工号和日期获取体检填写内容
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ErrData<List<Health_content_DetailModel>>> GetHealthContentDetailInfoAsync(QueryData<HealthStaffCountQuery_Model> query);
     }
 }

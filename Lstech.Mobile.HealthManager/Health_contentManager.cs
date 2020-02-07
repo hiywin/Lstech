@@ -13,6 +13,91 @@ namespace Lstech.Mobile.HealthManager
     public class Health_contentManager : IHealth_contentManager
     {
         /// <summary>
+        /// 根据工号和日期获取体检填写详细
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<ErrData<List<Health_content_DetailModel>>> GetHealthContentDetailInfoAsync(QueryData<HealthStaffCountQuery_Model> query)
+        {
+            var result = new ErrData<List<Health_content_DetailModel>>();
+            var dt = DateTime.Now;
+
+            List<Health_content_DetailModel> content_DetailModels = new List<Health_content_DetailModel>(); ;
+            try
+            {
+                GetHealthStaffCountQuery countQuery = new GetHealthStaffCountQuery();
+                countQuery.date = query.Criteria.date;
+                countQuery.userNo = query.Criteria.userNo;
+
+                var queryDetail = new QueryData<GetHealthStaffCountQuery>();
+                queryDetail.Criteria = countQuery;
+
+                var res = await HealthMobileOperaters.HealthContentOperater.GetHealthContentDetailsInfoByNoAndDate(queryDetail);
+                if (res.HasErr)
+                {
+                    result.SetInfo(content_DetailModels, res.ErrMsg, res.ErrCode);
+                }
+                else
+                {
+                    if (res.Data.Count > 0)
+                    {
+                        //content_DetailModels = new List<Health_content_DetailModel>();
+                        foreach (var item in res.Data)
+                        {
+                            if (!string.IsNullOrEmpty(item.Answer))
+                            {
+                                string[] AnswerArr = item.Answer.Split(';');
+                                if (AnswerArr.Length > 0)
+                                {
+                                    for (int i = 0; i < AnswerArr.Length; i++)
+                                    {
+                                        string[] cont = AnswerArr[i].Split(':');
+                                        Health_content_DetailModel health_Content_Detail = new Health_content_DetailModel();
+                                        if (string.IsNullOrEmpty(cont[0]))
+                                        {
+                                            health_Content_Detail.Content = "";
+                                            continue;
+                                        }
+                                        else
+                                        {
+                                            health_Content_Detail.Content = cont[0];
+                                        }
+                                        if (string.IsNullOrEmpty(cont[1]))
+                                        {
+                                            health_Content_Detail.Answer = "";
+                                        }
+                                        else
+                                        {
+                                            health_Content_Detail.Answer = cont[1];
+                                        }
+                                        health_Content_Detail.ContentId = item.ContentId;
+                                        health_Content_Detail.CreateName = item.CreateName;
+                                        health_Content_Detail.CreateTime = item.CreateTime;
+                                        health_Content_Detail.Creator = item.Creator;
+                                        health_Content_Detail.titleId = item.TitleId;
+                                        health_Content_Detail.TitleType = item.TitleType;
+                                        content_DetailModels.Add(health_Content_Detail);
+                                    }
+                                }
+                            }
+
+                        }
+                    }
+
+
+                    result.Data = content_DetailModels;
+                    result.SetInfo(content_DetailModels, "成功", 200);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.SetInfo(ex.ToString(), -500);
+            }
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        /// <summary>
         /// 组长查看组员填写
         /// </summary>
         /// <param name="query"></param>
@@ -152,7 +237,7 @@ namespace Lstech.Mobile.HealthManager
                 }
                 else
                 {
-                    if(resYZ.Data == null || resYZ.Data.Count == 0)
+                    if (resYZ.Data == null || resYZ.Data.Count == 0)
                     {
                         //如果通过工号查询不到就用姓名查询
                         GetHealthStaffInfoQuery staffInfoByNameQuery = new GetHealthStaffInfoQuery();
@@ -182,7 +267,7 @@ namespace Lstech.Mobile.HealthManager
                             //通过姓名查询到了
                             else
                             {
-                                result.SetInfo(returnToFactoryStart, "工号：" + query.Criteria.Creator + "异常,请联系HR："+ resNameYZ.Data[0].HrLeader, -111);
+                                result.SetInfo(returnToFactoryStart, "工号：" + query.Criteria.Creator + "异常,请联系HR：" + resNameYZ.Data[0].HrLeader, -111);
                                 result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
                                 return result;
                             }

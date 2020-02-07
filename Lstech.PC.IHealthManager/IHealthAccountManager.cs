@@ -1,5 +1,6 @@
 ﻿using Lstech.Common.Data;
 using Lstech.Entities.Health;
+using Lstech.PC.IHealthManager.Structs;
 using Lstech.PC.IHealthService.Structs;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,13 @@ namespace Lstech.PC.IHealthManager
     public interface IHealthAccountManager
     {
         Task<ErrData<IHealthUser>> HealthUserLoginAsync(QueryData<HealthUserQuery> query);
+
+        Task<ListResult<IHealthUser>> HealthUsersPageAsync(QueryData<HealthUserQuery> query);
+
+        Task<ListResult<IHealthStaff>> HealthStaffsPageAsync(QueryData<HealthStaffQuery> query);
+
+        Task<ErrData<bool>> HealthUserStaffSaveAsync(QueryData<HealthUserStaffModel> query);
+
+        Task<ErrData<bool>> HealthUserStaffDeleteAsync(QueryData<HealthUserStaffDeleteQuery> query);
     }
 }

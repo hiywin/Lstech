@@ -10,5 +10,13 @@ namespace Lstech.PC.IHealthService.Structs
         public string CommondLeaderNo { get; set; }
         public string HrLeader { get; set; }
         public string HrLeaderNo { get; set; }
+
+        public string StaffNo { get; set; }
+        public string StaffName { get; set; }
+        public string GroupType { get; set; }
+        public string GroupLeader { get; set; }
+        public string GroupLeaderNo { get; set; }
+        public string AggLeader { get; set; }
+        public string AggLeaderNo { get; set; }
     }
 }

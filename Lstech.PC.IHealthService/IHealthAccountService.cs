@@ -11,10 +11,38 @@ namespace Lstech.PC.IHealthService
     public interface IHealthAccountService
     {
         /// <summary>
+        /// 创建新实例
+        /// </summary>
+        /// <returns></returns>
+        IHealthUserStaff NewHealthUserStaff();
+
+        /// <summary>
         /// 分页获取用户
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<List<IHealthUser>>> GetHealthUserPageAsync(QueryData<HealthUserQuery> query);
+
+        /// <summary>
+        /// 分页获取人员结构列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealthStaff>>> GetHealthStaffPageAsync(QueryData<HealthStaffQuery> query);
+
+        /// <summary>
+        /// 保存登录用户-员工关联表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthUserStaffSaveAsync(QueryData<HealthUserStaffSaveQuery> query);
+
+        /// <summary>
+        /// 删除登录用户-员工关联表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthUserStaffDeleteAsync(QueryData<HealthUserStaffDeleteQuery> query);
+
     }
 }

@@ -42,7 +42,7 @@ namespace Lstech.Models.Health
         /// <summary>
         ///是否通过
         /// </summary>
-        public bool IsPass { get; set; }
+        public bool? IsPass { get; set; }
         /// <summary>
         /// 不通过原因
         /// </summary>

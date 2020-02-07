@@ -51,83 +51,85 @@ namespace Lstech.Mobile.HealthManager
 
                 //----------------
                 //到组织结构表中验证工号的正确
-                GetHealthStaffInfoQuery staffInfoByNoQuery = new GetHealthStaffInfoQuery();
-                staffInfoByNoQuery.StaffNo = query.Criteria.StaffNo;
-                staffInfoByNoQuery.StaffName = "";
+                //GetHealthStaffInfoQuery staffInfoByNoQuery = new GetHealthStaffInfoQuery();
+                //staffInfoByNoQuery.StaffNo = query.Criteria.StaffNo;
+                //staffInfoByNoQuery.StaffName = "";
 
-                var queryByNoYZ = new QueryData<GetHealthStaffInfoQuery>();
-                queryByNoYZ.Criteria = staffInfoByNoQuery;
-                var resYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNoYZ);
-                if (resYZ.HasErr)
-                {
-                    result.SetInfo(false, "通过工号验证工号是否归属组织表失败", resYZ.ErrCode);
-                    result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
-                    return result;
-                }
-                else
-                {
-                    if (resYZ.Data == null || resYZ.Data.Count == 0)
-                    {
-                        //如果通过工号查询不到就用姓名查询
-                        GetHealthStaffInfoQuery staffInfoByNameQuery = new GetHealthStaffInfoQuery();
-                        staffInfoByNameQuery.StaffNo = "";
-                        staffInfoByNameQuery.StaffName = query.Criteria.StaffName;
+                //var queryByNoYZ = new QueryData<GetHealthStaffInfoQuery>();
+                //queryByNoYZ.Criteria = staffInfoByNoQuery;
+                //var resYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNoYZ);
+                //if (resYZ.HasErr)
+                //{
+                //    result.SetInfo(false, "通过工号验证工号是否归属组织表失败", resYZ.ErrCode);
+                //    result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                //    return result;
+                //}
+                //else
+                //{
+                //    if (resYZ.Data == null || resYZ.Data.Count == 0)
+                //    {
+                //        //如果通过工号查询不到就用姓名查询
+                //        GetHealthStaffInfoQuery staffInfoByNameQuery = new GetHealthStaffInfoQuery();
+                //        staffInfoByNameQuery.StaffNo = "";
+                //        staffInfoByNameQuery.StaffName = query.Criteria.StaffName;
 
-                        var queryByNameYZ = new QueryData<GetHealthStaffInfoQuery>();
-                        queryByNameYZ.Criteria = staffInfoByNameQuery;
-
-
-                        var resNameYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNameYZ);
-                        if (resNameYZ.HasErr)
-                        {
-                            result.SetInfo(false, "通过姓名验证工号是否归属组织表失败", resYZ.ErrCode);
-                            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
-                            return result;
-                        }
-                        else
-                        {
-                            //工号姓名都没有查到
-                            if (resNameYZ.Data == null || resNameYZ.Data.Count == 0)
-                            {
-                                result.SetInfo(false, "未查询到工号：" + query.Criteria.StaffNo + "组织人员信息，请找当地HR确认", -111);
-                                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
-                                return result;
-                            }
-                            //通过姓名查询到了
-                            else
-                            {
-                                result.SetInfo(false, "工号：" + query.Criteria.StaffNo + "异常,请联系HR：" + resNameYZ.Data[0].HrLeader, -111);
-                                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
-                                return result;
-                            }
-                        }
-                    }
-                }
+                //        var queryByNameYZ = new QueryData<GetHealthStaffInfoQuery>();
+                //        queryByNameYZ.Criteria = staffInfoByNameQuery;
 
 
-                var pledgeInfoQuery = new GetHealthPledgeInfoQuery();
-                pledgeInfoQuery.StaffNo = query.Criteria.StaffNo;
+                //        var resNameYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNameYZ);
+                //        if (resNameYZ.HasErr)
+                //        {
+                //            result.SetInfo(false, "通过姓名验证工号是否归属组织表失败", resYZ.ErrCode);
+                //            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                //            return result;
+                //        }
+                //        else
+                //        {
+                //            //工号姓名都没有查到
+                //            if (resNameYZ.Data == null || resNameYZ.Data.Count == 0)
+                //            {
+                //                result.SetInfo(false, "未查询到工号：" + query.Criteria.StaffNo + "组织人员信息，请找当地HR确认", -111);
+                //                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                //                return result;
+                //            }
+                //            //通过姓名查询到了
+                //            else
+                //            {
+                //                result.SetInfo(false, "工号：" + query.Criteria.StaffNo + "异常,请联系HR：" + resNameYZ.Data[0].HrLeader, -111);
+                //                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                //                return result;
+                //            }
+                //        }
+                //    }
+                //}
 
-                var queryCN = new QueryData<GetHealthPledgeInfoQuery>();
-                queryCN.Criteria = pledgeInfoQuery;
 
-                var res = await HealthMobileOperaters.Health_pledgeServiceOperater.GetHealthPledgeInfo(queryCN);
-                if (res.HasErr)
-                {
-                    result.SetInfo(false, "承诺书确认提交失败", res.ErrCode);
-                }
-                else
-                {
-                    //如果根据工号查询到确认承诺书记录返回true,代表已阅读并且已经提交
-                    if (res.Data.Count > 0)
-                    {
-                        result.SetInfo(true, "承诺书已确认", 200);  
-                    }
-                    else
-                    {
-                        result.SetInfo(false, "承诺书未确认", -101);
-                    }
-                }
+                //var pledgeInfoQuery = new GetHealthPledgeInfoQuery();
+                //pledgeInfoQuery.StaffNo = query.Criteria.StaffNo;
+
+                //var queryCN = new QueryData<GetHealthPledgeInfoQuery>();
+                //queryCN.Criteria = pledgeInfoQuery;
+
+                //var res = await HealthMobileOperaters.Health_pledgeServiceOperater.GetHealthPledgeInfo(queryCN);
+                //if (res.HasErr)
+                //{
+                //    result.SetInfo(false, "承诺书确认提交失败", res.ErrCode);
+                //}
+                //else
+                //{
+                //    //如果根据工号查询到确认承诺书记录返回true,代表已阅读并且已经提交
+                //    if (res.Data.Count > 0)
+                //    {
+                //        result.SetInfo(true, "承诺书已确认", 200);  
+                //    }
+                //    else
+                //    {
+                //        result.SetInfo(false, "承诺书未确认", -101);
+                //    }
+                //}
+
+                result.SetInfo(true, "承诺书已确认", 200);
             }
             catch (Exception ex)
             {
