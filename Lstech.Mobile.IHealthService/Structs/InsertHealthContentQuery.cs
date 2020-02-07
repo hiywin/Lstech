@@ -34,5 +34,13 @@ namespace Lstech.Mobile.IHealthService.Structs
         /// 创建人姓名
         /// </summary>
         public string CreateName { get; set; }
+        /// <summary>
+        ///是否通过
+        /// </summary>
+        public bool IsPass { get; set; }
+        /// <summary>
+        /// 不通过原因
+        /// </summary>
+        public string NotPassReson { get; set; }
     }
 }

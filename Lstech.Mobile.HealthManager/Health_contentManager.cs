@@ -103,12 +103,15 @@ namespace Lstech.Mobile.HealthManager
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        public async Task<ErrData<bool>> InsertHealthContentMaAsync(QueryData<Health_content_Model> query)
+        public async Task<ErrData<ReturnToFactoryStartModel>> InsertHealthContentMaAsync(QueryData<Health_content_Model> query)
         {
-            var result = new ErrData<bool>();
+            var result = new ErrData<ReturnToFactoryStartModel>();
             var dt = DateTime.Now;
+            ReturnToFactoryStartModel returnToFactoryStart = new ReturnToFactoryStartModel(); ;
             try
             {
+
+
                 InsertHealthContentQuery contentQuery = new InsertHealthContentQuery();
                 contentQuery.Answer = query.Criteria.Answer;
                 contentQuery.ContentId = query.Criteria.ContentId;
@@ -117,19 +120,91 @@ namespace Lstech.Mobile.HealthManager
                 contentQuery.Creator = query.Criteria.Creator;
                 contentQuery.titleId = query.Criteria.TitleId;
                 contentQuery.TitleType = query.Criteria.TitleType;
+                contentQuery.IsPass = query.Criteria.IsPass;
+                contentQuery.NotPassReson = query.Criteria.NotPassReson;
 
 
+                //返厂判断
+                if (query.Criteria.IsPass == true)
+                {
+                    returnToFactoryStart.Start = "OK";
+                }
+                else
+                {
+                    returnToFactoryStart.Start = "NG";
+                }
+                returnToFactoryStart.Massage = contentQuery.NotPassReson;
+
+
+                //到组织结构表中验证工号的正确
+                GetHealthStaffInfoQuery staffInfoByNoQuery = new GetHealthStaffInfoQuery();
+                staffInfoByNoQuery.StaffNo = query.Criteria.Creator;
+                staffInfoByNoQuery.StaffName = "";
+
+                var queryByNoYZ = new QueryData<GetHealthStaffInfoQuery>();
+                queryByNoYZ.Criteria = staffInfoByNoQuery;
+                var resYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNoYZ);
+                if (resYZ.HasErr)
+                {
+                    result.SetInfo(returnToFactoryStart, "通过工号验证工号是否归属组织表失败", resYZ.ErrCode);
+                    result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                    return result;
+                }
+                else
+                {
+                    if(resYZ.Data == null || resYZ.Data.Count == 0)
+                    {
+                        //如果通过工号查询不到就用姓名查询
+                        GetHealthStaffInfoQuery staffInfoByNameQuery = new GetHealthStaffInfoQuery();
+                        staffInfoByNameQuery.StaffNo = "";
+                        staffInfoByNameQuery.StaffName = query.Criteria.CreateName;
+
+                        var queryByNameYZ = new QueryData<GetHealthStaffInfoQuery>();
+                        queryByNameYZ.Criteria = staffInfoByNameQuery;
+
+
+                        var resNameYZ = await HealthMobileOperaters.Health_staffServiceOperater.GetHealthStaffInfo(queryByNameYZ);
+                        if (resNameYZ.HasErr)
+                        {
+                            result.SetInfo(returnToFactoryStart, "通过姓名验证工号是否归属组织表失败", resYZ.ErrCode);
+                            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                            return result;
+                        }
+                        else
+                        {
+                            //工号姓名都没有查到
+                            if (resNameYZ.Data == null || resNameYZ.Data.Count == 0)
+                            {
+                                result.SetInfo(returnToFactoryStart, "未查询到工号：" + query.Criteria.Creator + "组织人员信息，请找当地HR确认", -111);
+                                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                                return result;
+                            }
+                            //通过姓名查询到了
+                            else
+                            {
+                                result.SetInfo(returnToFactoryStart, "工号：" + query.Criteria.Creator + "异常,请联系HR："+ resNameYZ.Data[0].HrLeader, -111);
+                                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                                return result;
+                            }
+                        }
+                    }
+                }
+
+
+                //保存体检填写内容
                 var queryXQ = new QueryData<InsertHealthContentQuery>();
                 queryXQ.Criteria = contentQuery;
 
                 var res = await HealthMobileOperaters.HealthContentOperater.InsertHealthContent(queryXQ);
                 if (res.HasErr)
                 {
-                    result.SetInfo(false, "体检详细信息提交失败", res.ErrCode);
+                    result.SetInfo(returnToFactoryStart, "体检详细信息提交失败", res.ErrCode);
                 }
                 else
                 {
-                    result.SetInfo(true, "成功");
+
+                    result.Data = returnToFactoryStart;
+                    result.SetInfo(returnToFactoryStart, "成功", 200);
                 }
             }
             catch (Exception ex)

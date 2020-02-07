@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Lstech.Models.Health
 {
-    public class Health_content_Model: IHealth_content_Model
+    public class Health_content_Model : IHealth_content_Model
     {
         /// <summary>
         /// Id
@@ -39,5 +39,13 @@ namespace Lstech.Models.Health
         /// 创建人姓名
         /// </summary>
         public string CreateName { get; set; }
+        /// <summary>
+        ///是否通过
+        /// </summary>
+        public bool IsPass { get; set; }
+        /// <summary>
+        /// 不通过原因
+        /// </summary>
+        public string NotPassReson { get; set; }
     }
 }

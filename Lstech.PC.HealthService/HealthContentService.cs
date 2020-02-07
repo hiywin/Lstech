@@ -59,15 +59,9 @@ namespace Lstech.PC.HealthService
             condition += query.Criteria.StarTime == null ? string.Empty : string.Format(" and CreateTime >= '{0}' ", query.Criteria.StarTime);
             condition += query.Criteria.EndTime == null ? string.Empty : string.Format(" and CreateTime <= '{0}' ", query.Criteria.EndTime);
             condition += string.IsNullOrEmpty(query.Criteria.HrLeaderNo) ? string.Empty : string.Format(" and HrLeaderNo = '{0}' ", query.Criteria.HrLeaderNo);
-            //string sql = string.Format(@"SELECT 
-            //    a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName]
-            //    ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
-            //    FROM [dbo].[health_content] a
-            //    LEFT JOIN [dbo].[health_staff] b
-            //    ON a.Creator=b.StaffNo {0}", condition);
             string sql = string.Format(@"SELECT * FROM (
                 SELECT ROW_NUMBER() OVER ( PARTITION BY [Creator], CONVERT(varchar(100), CreateTime, 23) ORDER BY [CreateTime] DESC ) AS num,
-                a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName]
+                a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName],[IsPass],[NotPassReson]
                 ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
                 FROM [dbo].[health_content] a
                 LEFT JOIN [dbo].[health_staff] b
@@ -158,7 +152,7 @@ namespace Lstech.PC.HealthService
             condition += string.IsNullOrEmpty(query.Criteria.HrLeaderNo) ? string.Empty : string.Format(" and HrLeaderNo = '{0}' ", query.Criteria.HrLeaderNo);
             string sql = string.Format(@"SELECT * FROM (
                 SELECT ROW_NUMBER() OVER ( PARTITION BY [Creator], CONVERT(varchar(100), CreateTime, 23) ORDER BY [CreateTime] DESC ) AS num,
-                a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName]
+                a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName],[IsPass],[NotPassReson]
                 ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
                 FROM [dbo].[health_content] a
                 LEFT JOIN [dbo].[health_staff] b

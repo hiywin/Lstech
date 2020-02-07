@@ -14,6 +14,8 @@ namespace Lstech.Models.Health
         public string Creator { get; set; }
         public string CreateName { get; set; }
         public DateTime CreateTime { get; set; }
+        public bool? IsPass { get; set; }
+        public string NotPassReson { get; set; }
 
         public string StaffNo { get; set; }
         public string StaffName { get; set; }

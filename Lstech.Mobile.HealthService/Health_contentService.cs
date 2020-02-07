@@ -91,7 +91,7 @@ namespace Lstech.Mobile.HealthService
         {
             var lr = new DataResult<int>();
 
-            string condition = string.Format(@"insert into health_content(ContentId,titleId,TitleType,Answer,Creator,CreateTime,CreateName) values(@ContentId,@titleId,@TitleType,@Answer,@Creator,@CreateTime,@CreateName)");
+            string condition = string.Format(@"insert into health_content(ContentId,titleId,TitleType,Answer,Creator,CreateTime,CreateName,IsPass,NotPassReson) values(@ContentId,@titleId,@TitleType,@Answer,@Creator,@CreateTime,@CreateName,@IsPass,@NotPassReson)");
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
                 try

@@ -89,6 +89,7 @@ namespace Lstech.Api
             /****** Hiywin.IHealth_contentManager *****/
             services.AddSingleton<IHealth_contentManager, Health_contentManager>();
             services.AddSingleton<IHealthAccountMobileManager, HealthAccountMobileManager>();
+            services.AddSingleton<IHealth_pledgeManager, Health_pledgeManager>();
 
         }
 

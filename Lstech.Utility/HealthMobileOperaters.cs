@@ -23,6 +23,12 @@ namespace Lstech.Utility
             if (!dic.ContainsKey("ITlgChinaWebService"))
                 dic.Add("ITlgChinaWebService", null);
 
+            if (!dic.ContainsKey("IHealth_staffService"))
+                dic.Add("IHealth_staffService", null);
+
+            if (!dic.ContainsKey("IHealth_pledgeService"))
+                dic.Add("IHealth_pledgeService", null);
+
             return true;
         }
 
@@ -61,6 +67,7 @@ namespace Lstech.Utility
             }
         }
 
+
         public static ITlgChinaWebService TlgChinaWebServiceOperater
         {
             get
@@ -71,6 +78,41 @@ namespace Lstech.Utility
                 svr = new TlgChinaWebService();
 
                 dic["ITlgChinaWebService"] = svr;
+                return svr;
+            }
+        }
+
+        /// <summary>
+        /// 组织人员操作
+        /// </summary>
+        public static IHealth_staffService Health_staffServiceOperater
+        {
+            get
+            {
+                var svr = dic["IHealth_staffService"] as IHealth_staffService;
+                if (svr != null) return svr;
+
+                svr = new Health_staffService();
+
+                dic["IHealth_staffService"] = svr;
+                return svr;
+            }
+        }
+
+
+        /// <summary>
+        /// 承诺书确认
+        /// </summary>
+        public static IHealth_pledgeService Health_pledgeServiceOperater
+        {
+            get
+            {
+                var svr = dic["IHealth_pledgeService"] as IHealth_pledgeService;
+                if (svr != null) return svr;
+
+                svr = new Health_pledgeService();
+
+                dic["IHealth_pledgeService"] = svr;
                 return svr;
             }
         }

@@ -1,5 +1,5 @@
 ﻿using Lstech.Common.Data;
-using Lstech.Models.Health;
+using Lstech.Mobile.IHealthService.Structs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace Lstech.Mobile.IHealthManager
 {
-    public interface IHealth_contentManager
+    public interface IHealth_pledgeManager
     {
         /// <summary>
-        /// 提交提交内容详细信息
+        /// 根据工号验证是否确认承诺书
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ErrData<ReturnToFactoryStartModel>> InsertHealthContentMaAsync(QueryData<Health_content_Model> query);
+        Task<ErrData<bool>> GetHealthPledgeByNoMaAsync(QueryData<GetHealthPledgeInfoQuery> query);
 
         /// <summary>
-        /// 组长查看组员填写
+        /// 保存确认承诺书
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
-        Task<ListResult<GroupLeaderViewHealthModel>> GetHealthStaffCountAsync(QueryData<HealthStaffCountQuery_Model> query);
+        Task<ErrData<bool>> InsertHealthPledgeInfoMaAsync(QueryData<InsertHealthPledgeInfoQuery> query);
     }
 }

@@ -39,6 +39,11 @@ namespace Lstech.Api.Controllers
         //    return Ok(result);
         //}
 
+        /// <summary>
+        /// 查询体检内容-使用
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize, HttpPost, Route("get_health_contents")]
         public async Task<IActionResult> GetHealthContents(HealthContentQueryViewModel model)
         {
@@ -139,6 +144,13 @@ namespace Lstech.Api.Controllers
             return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
         }
 
+        /// <summary>
+        /// 导出体检内容-使用
+        /// </summary>
+        /// <param name="userNo"></param>
+        /// <param name="starTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
         [HttpGet, Route("health_content_export_hr_get")]
         public async Task<IActionResult> HealthContentExportHrGet(string userNo, DateTime? starTime, DateTime? endTime)
         {

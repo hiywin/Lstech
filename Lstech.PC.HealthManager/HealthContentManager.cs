@@ -90,6 +90,8 @@ namespace Lstech.PC.HealthManager
                 table.Columns.Add("集合组组长", Type.GetType("System.String"));
                 table.Columns.Add("部门总指挥", Type.GetType("System.String"));
                 table.Columns.Add(" HR负责人", Type.GetType("System.String"));
+                table.Columns.Add("是否通过", Type.GetType("System.String"));
+                table.Columns.Add("不通过原因", Type.GetType("System.String"));
                 foreach (var column in lstTitle)
                 {
                     table.Columns.Add(column, Type.GetType("System.String"));
@@ -108,6 +110,8 @@ namespace Lstech.PC.HealthManager
                     row["集合组组长"] = item.AggLeader;
                     row["部门总指挥"] = item.CommandLeader;
                     row[" HR负责人"] = item.HrLeader;
+                    row["是否通过"] = item.IsPass == false ? "NG" : "OK";
+                    row["不通过原因"] = item.NotPassReson;
 
                     var answer = item.Answer;
                     var anArray = answer.Split(';');
@@ -352,6 +356,8 @@ namespace Lstech.PC.HealthManager
                 table.Columns.Add("集合组组长", Type.GetType("System.String"));
                 table.Columns.Add("部门总指挥", Type.GetType("System.String"));
                 table.Columns.Add(" HR负责人", Type.GetType("System.String"));
+                table.Columns.Add("是否通过", Type.GetType("System.String"));
+                table.Columns.Add("不通过原因", Type.GetType("System.String"));
                 foreach (var column in lstTitle)
                 {
                     table.Columns.Add(column, Type.GetType("System.String"));
@@ -370,6 +376,8 @@ namespace Lstech.PC.HealthManager
                     row["集合组组长"] = item.AggLeader;
                     row["部门总指挥"] = item.CommandLeader;
                     row[" HR负责人"] = item.HrLeader;
+                    row["是否通过"] = item.IsPass == false ? "NG" : "OK";
+                    row["不通过原因"] = item.NotPassReson;
 
                     var answer = item.Answer;
                     var anArray = answer.Split(';');

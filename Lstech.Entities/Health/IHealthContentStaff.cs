@@ -13,6 +13,8 @@ namespace Lstech.Entities.Health
         string Creator { get; set; }
         string CreateName { get; set; }
         DateTime CreateTime { get; set; }
+        bool? IsPass { get; set; }
+        string NotPassReson { get; set; }
 
         string StaffNo { get; set; }
         string StaffName { get; set; }
