@@ -65,6 +65,32 @@ namespace Lstech.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// 查询体检内容-备用(权限管理界面完成后使用)
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("get_health_user_staff_contents")]
+        public async Task<IActionResult> GetHealthUserStaffContents(HealthContentQueryViewModel model)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    Answer = model.Answer,
+                    Creator = model.Creator,
+                    CreateName = model.CreateName,
+                    StarTime = model.StarTime,
+                    EndTime = model.EndTime,
+                    UpStaffNo = CurrentUser.IsAdmin ? string.Empty : CurrentUser.UserNo
+                },
+                PageModel = model.PageModel
+            };
+            var result = await _manager.GetHealthContentPageAsyncEx(query);
+
+            return Ok(result);
+        }
+
         [HttpGet, Route("health_content_export")]
         public async Task<IActionResult> HealthContentExport(int pageIndex,int pageSize)
         {
@@ -168,6 +194,38 @@ namespace Lstech.Api.Controllers
                 }
             };
             var result = await _manager.HealthContentExcelExportHrAllAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
+
+        /// <summary>
+        /// 导出体检内容-备用(权限管理界面完成后使用)
+        /// </summary>
+        /// <param name="userNo"></param>
+        /// <param name="starTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        [HttpGet, Route("health_content_export_user_staff_get")]
+        public async Task<IActionResult> HealthContentExportUserStaffGet(string userNo, DateTime? starTime, DateTime? endTime)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    StarTime = starTime,
+                    EndTime = endTime
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = userNo,
+                    IsAdmin = true
+                }
+            };
+            var result = await _manager.HealthContentExcelExportUserStaffAllAsync(query);
             if (result.HasErr)
             {
                 return Ok(result);

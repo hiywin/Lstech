@@ -87,6 +87,11 @@ namespace Lstech.Api.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// 获取人员结构列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [Authorize, HttpPost, Route("get_health_staffs")]
         public async Task<IActionResult> GetHealthStaffs(HealthStaffsQueryViewModel model)
         {
@@ -114,6 +119,80 @@ namespace Lstech.Api.Controllers
         }
 
         /// <summary>
+        /// 新增或修改人员结构信息
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("health_staff_save_or_update")]
+        public async Task<IActionResult> HealthStaffSaveOrUpdate(HealthStaffSaveOrUpdateViewModel model)
+        {
+            var query = new QueryData<HealthStaffQuery>()
+            {
+                Criteria = new HealthStaffQuery()
+                {
+                    Id = model.Id,
+                    StaffNo = model.StaffNo,
+                    StaffName = model.StaffName,
+                    GroupType = model.GroupType,
+                    GroupLeader = model.GroupLeader,
+                    GroupLeaderNo = model.GroupLeaderNo,
+                    AggLeader = model.AggLeader,
+                    AggLeaderNo = model.AggLeaderNo,
+                    CommandLeader = model.CommandLeader,
+                    CommondLeaderNo = model.CommondLeaderNo,
+                    HrLeader = model.HrLeader,
+                    HrLeaderNo = model.HrLeaderNo
+                }
+            };
+            var result = await _manager.HealthStaffSaveOrUpdateAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 删除人员结构员工
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("health_staff_delete")]
+        public async Task<IActionResult> HealthStaffSDelete(HealthStaffDeleteViewModel model)
+        {
+            var query = new QueryData<HealthStaffQuery>()
+            {
+                Criteria = new HealthStaffQuery()
+                {
+                    Id = model.Id
+                }
+            };
+            var result = await _manager.HealthStaffDeleteAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 获取权限-人员结构关联列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("get_health_user_staff_infos")]
+        public async Task<IActionResult> GetHealthUserStaffInfos(HealthUserStaffInfoViewModel model)
+        {
+            var query = new QueryData<HealthUserStaffInfoQuery>()
+            {
+                Criteria = new HealthUserStaffInfoQuery()
+                {
+                    UserNo = model.UpStaffNo,
+                    StaffNo = model.StaffNo,
+                    StaffName = model.StaffName
+                },
+                PageModel = model.PageModel
+            };
+            var result = await _manager.HealthUserStaffInfoPageAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// 保存登录用户-员工关联表
         /// </summary>
         /// <param name="model"></param>
@@ -125,7 +204,7 @@ namespace Lstech.Api.Controllers
             {
                 Criteria = new HealthUserStaffModel()
                 {
-                    UserNo = CurrentUser.UserNo,
+                    UserNo = model.UpStaffNo,
                     LstStaffNo = model.LstStaffNo
                 },
                 Extend = new QueryExtend()
@@ -151,7 +230,7 @@ namespace Lstech.Api.Controllers
             {
                 Criteria = new HealthUserStaffDeleteQuery()
                 {
-                    UserNo = CurrentUser.UserNo,
+                    UserNo = model.UpStaffNo,
                     StaffNo = model.StaffNo
                 }
             };

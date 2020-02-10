@@ -59,6 +59,7 @@ namespace Lstech.PC.HealthService
             condition += query.Criteria.StarTime == null ? string.Empty : string.Format(" and CreateTime >= '{0}' ", query.Criteria.StarTime);
             condition += query.Criteria.EndTime == null ? string.Empty : string.Format(" and CreateTime <= '{0}' ", query.Criteria.EndTime);
             condition += string.IsNullOrEmpty(query.Criteria.HrLeaderNo) ? string.Empty : string.Format(" and HrLeaderNo = '{0}' ", query.Criteria.HrLeaderNo);
+            condition += string.IsNullOrEmpty(query.Criteria.UpStaffNo) ? string.Empty : string.Format(" and Creator in (select StaffNo from dbo.health_user_staff where UserNo='{0}') ", query.Criteria.UpStaffNo);
             string sql = string.Format(@"SELECT * FROM (
                 SELECT ROW_NUMBER() OVER ( PARTITION BY [Creator], CONVERT(varchar(100), CreateTime, 23) ORDER BY [CreateTime] DESC ) AS num,
                 a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName],[IsPass],[NotPassReson]
@@ -187,6 +188,41 @@ namespace Lstech.PC.HealthService
                 {
                     var modelList = await MssqlHelper.QueryListAsync<HealthStaff>(dbConn, sql);
                     result.Data = modelList.ToList<IHealthStaff>();
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = null;
+                }
+            }
+            return result;
+        }
+
+        public async Task<DataResult<List<IHealthContentStaff>>> GetHealthContentUserStaffAllAsync(QueryData<HealthContentQuery> query)
+        {
+            var result = new DataResult<List<IHealthContentStaff>>();
+
+            string condition = @" where 1=1 ";
+            condition += string.IsNullOrEmpty(query.Criteria.Answer) ? string.Empty : string.Format(" and Content like '%{0}%' ", query.Criteria.Answer);
+            condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator = '{0}' ", query.Criteria.Creator);
+            condition += string.IsNullOrEmpty(query.Criteria.CreateName) ? string.Empty : string.Format(" and CreateName like '%{0}%' ", query.Criteria.CreateName);
+            condition += query.Criteria.StarTime == null ? string.Empty : string.Format(" and CreateTime >= '{0}' ", query.Criteria.StarTime);
+            condition += query.Criteria.EndTime == null ? string.Empty : string.Format(" and CreateTime <= '{0}' ", query.Criteria.EndTime);
+            condition += string.IsNullOrEmpty(query.Criteria.HrLeaderNo) ? string.Empty : string.Format(" and HrLeaderNo = '{0}' ", query.Criteria.HrLeaderNo);
+            condition += string.IsNullOrEmpty(query.Criteria.UpStaffNo) ? string.Empty : string.Format(" and Creator in (select StaffNo from dbo.health_user_staff where UserNo='{0}') ", query.Criteria.UpStaffNo);
+            string sql = string.Format(@"SELECT * FROM (
+                SELECT ROW_NUMBER() OVER ( PARTITION BY [Creator], CONVERT(varchar(100), CreateTime, 23) ORDER BY [CreateTime] DESC ) AS num,
+                a.[Id],[ContentId],[TitleId],[TitleType],[Answer],[Creator],[CreateTime],[CreateName],[IsPass],[NotPassReson]
+                ,[StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo]
+                FROM [dbo].[health_content] a
+                LEFT JOIN [dbo].[health_staff] b
+                ON a.Creator=b.StaffNo {0}) as T where num=1 ", condition);
+            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                try
+                {
+                    var modelList = await MssqlHelper.QueryListAsync<HealthContentStaff>(dbConn, sql);
+                    result.Data = modelList.ToList<IHealthContentStaff>();
                 }
                 catch (Exception ex)
                 {

@@ -72,7 +72,10 @@ namespace Lstech.PC.HealthManager
             {
                 foreach (var item in res.Data)
                 {
-                    result.Results.Add(item);
+                    if (!item.IsAdmin)
+                    {
+                        result.Results.Add(item);
+                    }
                 }
                 result.SetInfo("成功", 200);
                 result.PageModel = res.PageInfo;
@@ -88,6 +91,82 @@ namespace Lstech.PC.HealthManager
             var dt = DateTime.Now;
 
             var res = await HealthPcOperaters.HealthAccountOperater.GetHealthStaffPageAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    result.Results.Add(item);
+                }
+                result.SetInfo("成功", 200);
+                result.PageModel = res.PageInfo;
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<bool>> HealthStaffSaveOrUpdateAsync(QueryData<HealthStaffQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            var res = await HealthPcOperaters.HealthAccountOperater.HealthStaffSaveOrUpdateAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(false, res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                if (query.Criteria.Id <= 0)
+                {
+                    result.SetInfo(true, "添加成功！", 200);
+                }
+                else
+                {
+                    result.SetInfo(true, "修改成功！", 200);
+                }
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<bool>> HealthStaffDeleteAsync(QueryData<HealthStaffQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            if (query.Criteria.Id <= 0)
+            {
+                result.SetInfo(false, "请选择需要删除的数据！", -102);
+            }
+            else
+            {
+                var res = await HealthPcOperaters.HealthAccountOperater.HealthStaffDeleteAsync(query);
+                if (res.HasErr)
+                {
+                    result.SetInfo(false, res.ErrMsg, res.ErrCode);
+                }
+                else
+                {
+                    result.SetInfo(true, "删除成功！", 200);
+                }
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ListResult<IHealthUserStaffInfo>> HealthUserStaffInfoPageAsync(QueryData<HealthUserStaffInfoQuery> query)
+        {
+            var result = new ListResult<IHealthUserStaffInfo>();
+            var dt = DateTime.Now;
+
+            var res = await HealthPcOperaters.HealthAccountOperater.GetHealthUserStaffInfoPageAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(res.ErrMsg, res.ErrCode);
@@ -167,5 +246,6 @@ namespace Lstech.PC.HealthManager
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return result;
         }
+
     }
 }

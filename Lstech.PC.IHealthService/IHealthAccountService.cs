@@ -31,6 +31,27 @@ namespace Lstech.PC.IHealthService
         Task<DataResult<List<IHealthStaff>>> GetHealthStaffPageAsync(QueryData<HealthStaffQuery> query);
 
         /// <summary>
+        /// 人员结构新增或修改
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthStaffSaveOrUpdateAsync(QueryData<HealthStaffQuery> query);
+
+        /// <summary>
+        /// 人员结构删除员工
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthStaffDeleteAsync(QueryData<HealthStaffQuery> query);
+
+        /// <summary>
+        /// 分页获取关联表-人员结构列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealthUserStaffInfo>>> GetHealthUserStaffInfoPageAsync(QueryData<HealthUserStaffInfoQuery> query);
+
+        /// <summary>
         /// 保存登录用户-员工关联表
         /// </summary>
         /// <param name="query"></param>

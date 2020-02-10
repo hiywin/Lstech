@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Lstech.Api.Models.HealthAccount
 {
-    public class HealthUserStaffDeleteViewModel
+    public class HealthStaffDeleteViewModel
     {
         [Required]
-        public string UpStaffNo { get; set; }
-        [Required]
-        public string StaffNo { get; set; }
+        public int Id { get; set; }
     }
 }

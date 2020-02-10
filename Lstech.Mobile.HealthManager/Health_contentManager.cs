@@ -115,13 +115,13 @@ namespace Lstech.Mobile.HealthManager
 
             //先获取本组所有组员填写信息（统计本组未填写数量）
             var queryAll = new QueryData<GetHealthStaffCountQuery>();
-            PageModel page = new PageModel();
-            page.PageIndex = 1;
-            page.PageSize = 1000;
+            //PageModel page = new PageModel();
+            //page.PageIndex = 1;
+            //page.PageSize = 1000;
 
             queryAll.Criteria = queryCt;
-            queryAll.PageModel = page;
-            var resAll = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryAll);  ///获取组员填写次数
+            //queryAll.PageModel = page;
+            var resAll = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount_All(queryAll);  ///获取组员填写次数
             if (resAll.HasErr)
             {
                 lr.SetInfo(resAll.ErrMsg, resAll.ErrCode);

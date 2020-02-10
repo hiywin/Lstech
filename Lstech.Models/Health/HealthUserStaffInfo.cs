@@ -1,13 +1,19 @@
-﻿using System;
+﻿using Lstech.Entities.Health;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Lstech.PC.IHealthService.Structs
+namespace Lstech.Models.Health
 {
-    public class HealthStaffQuery
+    public class HealthUserStaffInfo: IHealthUserStaffInfo
     {
         public int Id { get; set; }
+        public string UserNo { get; set; }
         public string StaffNo { get; set; }
+        public string Creator { get; set; }
+        public string CreateName { get; set; }
+        public DateTime CreateTime { get; set; }
+
         public string StaffName { get; set; }
         public string GroupType { get; set; }
         public string GroupLeader { get; set; }

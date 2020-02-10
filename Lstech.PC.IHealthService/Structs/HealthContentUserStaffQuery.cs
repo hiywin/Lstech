@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Lstech.PC.IHealthService.Structs
 {
-    public class HealthContentQuery
+    public class HealthContentUserStaffQuery
     {
         public string Answer { get; set; }
         public string Creator { get; set; }
@@ -13,6 +13,5 @@ namespace Lstech.PC.IHealthService.Structs
         public DateTime? StarTime { get; set; }
         public DateTime? EndTime { get; set; }
         public string HrLeaderNo { get; set; }
-        public string UpStaffNo { get; set; }
     }
 }

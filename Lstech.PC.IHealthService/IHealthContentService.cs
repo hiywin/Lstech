@@ -52,5 +52,12 @@ namespace Lstech.PC.IHealthService
         /// <returns></returns>
         Task<DataResult<List<IHealthStaff>>> GetHealthStaffHrAllAsync(QueryData<HealthStaffQuery> query);
 
+        /// <summary>
+        /// 根据权限用户获取所有内容
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealthContentStaff>>> GetHealthContentUserStaffAllAsync(QueryData<HealthContentQuery> query);
+
     }
 }
