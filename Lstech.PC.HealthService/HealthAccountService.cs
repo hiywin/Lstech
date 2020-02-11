@@ -296,5 +296,34 @@ namespace Lstech.PC.HealthService
             return result;
         }
 
+        public async Task<DataResult<List<IHealthPowerStaff>>> GetHealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query)
+        {
+            var result = new DataResult<List<IHealthPowerStaff>>();
+
+            string condition = @" where 1=1 ";
+            condition += string.IsNullOrEmpty(query.Criteria.UserNo) ? string.Empty : string.Format(" and UserNo = '{0}' ", query.Criteria.UserNo);
+            condition += string.IsNullOrEmpty(query.Criteria.StaffName) ? string.Empty : string.Format(" and StaffName like '%{0}%' ", query.Criteria.StaffName);
+            condition += string.IsNullOrEmpty(query.Criteria.Creator) ? string.Empty : string.Format(" and Creator = '{0}' ", query.Criteria.Creator);
+            condition += query.Extend.IsAdmin ? string.Empty : string.Format(" or UserNo = '{0}' ", query.Criteria.Creator);
+            string sql = string.Format(@"select distinct(UserNo),StaffName
+                from [dbo].[health_user_staff] a
+                left join dbo.health_staff b
+                on a.UserNo=b.StaffNo {0}", condition);
+            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                try
+                {
+                    var modelList = await MssqlHelper.QueryPageAsync<HealthPowerStaff>(dbConn, "UserNo desc", sql, query.PageModel);
+                    result.Data = modelList.ToList<IHealthPowerStaff>();
+                    result.PageInfo = query.PageModel;
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = null;
+                }
+            }
+            return result;
+        }
     }
 }

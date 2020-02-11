@@ -255,5 +255,25 @@ namespace Lstech.Api.Controllers
 
             return Ok(result);
         }
+
+
+
+        [HttpPost, Route("get_TeamLeaderQuery")]
+        public async Task<IActionResult> TeamLeaderQueryTeamInfo(TeamLeaderQueryTeamModel model)
+        {
+            var condition = new GetTeamLeaderQueryModel();
+            condition.date = model.date;
+            condition.userNo = model.userNo;
+            condition.teamNO = model.teamNO;
+            condition.teamName = model.teamName;
+
+            var query = new QueryData<GetTeamLeaderQueryModel>();
+            query.Criteria = condition;
+            query.PageModel = model.PageModel;
+
+            var result = await _manager.TeamLeaderQueryInfoAsync(query);
+
+            return Ok(result);
+        }
     }
 }

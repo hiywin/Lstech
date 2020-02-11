@@ -121,7 +121,7 @@ namespace Lstech.Mobile.HealthManager
 
             queryAll.Criteria = queryCt;
             //queryAll.PageModel = page;
-            var resAll = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount_All(queryAll);  ///获取组员填写次数
+            var resAll = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount_All(queryAll);  ///根据权限获取当前所有组员填写
             if (resAll.HasErr)
             {
                 lr.SetInfo(resAll.ErrMsg, resAll.ErrCode);
@@ -153,7 +153,7 @@ namespace Lstech.Mobile.HealthManager
             var queryHs = new QueryData<GetHealthStaffCountQuery>();
             queryHs.Criteria = queryCt;
             queryHs.PageModel = query.PageModel;
-            var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryHs);  ///获取组员填写次数
+            var res = await HealthMobileOperaters.HealthContentOperater.GetHealthStaffCount(queryHs);  ///获取组员填写次数（分页查询）
             if (res.HasErr)
             {
                 lr.SetInfo(res.ErrMsg, res.ErrCode);
@@ -298,6 +298,90 @@ namespace Lstech.Mobile.HealthManager
             }
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return result;
+        }
+
+
+        /// <summary>
+        /// 组长查看组员组员填写（根据分配权限）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        public async Task<ListResult<GroupLeaderViewHealthModel>> TeamLeaderQueryInfoAsync(QueryData<GetTeamLeaderQueryModel> query)
+        {
+            var lr = new ListResult<GroupLeaderViewHealthModel>();
+            List<Health_staff_Model> health_Staffs = null;
+            GroupLeaderViewHealthModel healthModel = null;
+            var dt = DateTime.Now;
+
+            var queryCt = new GetTeamLeaderQueryModel();
+            queryCt.date = query.Criteria.date;
+            queryCt.userNo = query.Criteria.userNo;
+            queryCt.teamNO = query.Criteria.teamNO;
+            queryCt.teamName = query.Criteria.teamName;
+
+            //先获取本组所有组员填写信息（统计本组未填写数量）
+            var queryAll = new QueryData<GetTeamLeaderQueryModel>();
+            queryAll.Criteria = queryCt;
+
+            var resAll = await HealthMobileOperaters.HealthContentOperater.TeamLeaderQuery_All(queryAll);  ///根据权限获取当前所有组员填写
+            if (resAll.HasErr)
+            {
+                lr.SetInfo(resAll.ErrMsg, resAll.ErrCode);
+                return lr;
+            }
+            else
+            {
+                healthModel = new GroupLeaderViewHealthModel();
+                int totalCt = 0;
+                int wtxCT = 0;
+                if (resAll.Data.Count > 0)
+                {
+                    totalCt = resAll.Data.Count;
+                    foreach (var itemA in resAll.Data)
+                    {
+                        if (itemA.iswrite == "0")
+                        {
+                            wtxCT += 1;
+                        }
+                    }
+                    healthModel.NotFilledCount = wtxCT;
+                    healthModel.TotalCount = totalCt;
+                }
+            }
+
+
+
+            //获取组员填写（分页）
+            var queryHs = new QueryData<GetTeamLeaderQueryModel>();
+            queryHs.Criteria = queryCt;
+            queryHs.PageModel = query.PageModel;
+            var res = await HealthMobileOperaters.HealthContentOperater.TeamLeaderQuery(queryHs);  ///获取组员填写次数（分页查询）
+            if (res.HasErr)
+            {
+                lr.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                if (res.Data.Count > 0)
+                {
+                    health_Staffs = new List<Health_staff_Model>();
+                    foreach (var item in res.Data)
+                    {
+                        Health_staff_Model staff_Model = new Health_staff_Model();
+                        staff_Model.StaffNo = item.StaffNo;
+                        staff_Model.STAFFName = item.STAFFName;
+                        staff_Model.iswrite = item.iswrite;
+                        health_Staffs.Add(staff_Model);
+                    }
+                }
+                healthModel.health_Staffs = health_Staffs;
+                lr.Data = healthModel;
+                lr.PageModel = res.PageInfo;
+                lr.SetInfo("成功", 200);
+            }
+
+            lr.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return lr;
         }
     }
 }

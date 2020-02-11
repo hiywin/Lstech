@@ -29,7 +29,7 @@ namespace Lstech.Mobile.IHealthService
         Task<DataResult<List<IHealth_staff_Model>>> GetHealthStaffCount(QueryData<GetHealthStaffCountQuery> query);
 
         /// <summary>
-        /// 获取所有组员填写
+        /// 组长查看组员填写（根据组员工号和姓名）
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>
@@ -42,5 +42,19 @@ namespace Lstech.Mobile.IHealthService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<List<IHealth_content_Model>>> GetHealthContentDetailsInfoByNoAndDate(QueryData<GetHealthStaffCountQuery> query);
+
+        /// <summary>
+        /// 组长查询（根据权限查询）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealth_staff_Model>>> TeamLeaderQuery(QueryData<GetTeamLeaderQueryModel> query);
+
+        /// <summary>
+        /// 组长查询（根据权限查询所有）
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealth_staff_Model>>> TeamLeaderQuery_All(QueryData<GetTeamLeaderQueryModel> query);
     }
 }

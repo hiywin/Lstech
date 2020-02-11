@@ -19,7 +19,7 @@ namespace Lstech.PC.HealthManager
             var queryEx = query.Criteria;
             queryEx.IsParentQuery = true;
             queryEx.ParentId = string.Empty;
-            queryEx.IsShow = true;
+            //queryEx.IsShow = true;
             query.Criteria = queryEx;
             var res = await HealthPcOperaters.HealthTitleOperater.GetHealthTitlePageAsync(query);
             if (res.HasErr)
@@ -32,8 +32,7 @@ namespace Lstech.PC.HealthManager
                 {
                     Criteria = new HealthTitleQuery()
                     {
-                        IsParentQuery = false,
-                        IsShow = true
+                        IsParentQuery = false
                     }
                 };
                 var resSub = await HealthPcOperaters.HealthTitleOperater.GetHealthTitleAllAsync(querySub);

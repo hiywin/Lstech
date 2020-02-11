@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Mobile.IHealthService.Structs;
 using Lstech.Models.Health;
 using System;
 using System.Collections.Generic;
@@ -29,5 +30,12 @@ namespace Lstech.Mobile.IHealthManager
         /// <param name="query"></param>
         /// <returns></returns>
         Task<ErrData<List<Health_content_DetailModel>>> GetHealthContentDetailInfoAsync(QueryData<HealthStaffCountQuery_Model> query);
+
+        /// <summary>
+        /// 组长根据权限查看组员填写信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<ListResult<GroupLeaderViewHealthModel>> TeamLeaderQueryInfoAsync(QueryData<GetTeamLeaderQueryModel> query);
     }
 }

@@ -65,5 +65,12 @@ namespace Lstech.PC.IHealthService
         /// <returns></returns>
         Task<DataResult<int>> HealthUserStaffDeleteAsync(QueryData<HealthUserStaffDeleteQuery> query);
 
+        /// <summary>
+        /// 获取有权限管理用户列表
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<List<IHealthPowerStaff>>> GetHealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query);
+
     }
 }

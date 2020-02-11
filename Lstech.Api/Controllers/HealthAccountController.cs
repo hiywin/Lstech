@@ -77,8 +77,8 @@ namespace Lstech.Api.Controllers
                 Criteria = new HealthUserQuery()
                 {
                     AdAccount = model.AdAccount,
-                    UserNo = model.UserNo,
-                    UserName = model.UserName
+                    UserNo = CurrentUser.IsAdmin ? model.UserNo : CurrentUser.UserNo,
+                    UserName = CurrentUser.IsAdmin ? model.UserName : string.Empty
                 },
                 PageModel = model.PageModel
             };
@@ -108,8 +108,8 @@ namespace Lstech.Api.Controllers
                     AggLeaderNo = model.AggLeaderNo,
                     CommandLeader = model.CommandLeader,
                     CommondLeaderNo = model.CommondLeaderNo,
-                    HrLeader = model.HrLeader,
-                    HrLeaderNo = model.HrLeaderNo
+                    HrLeader = CurrentUser.IsAdmin ? model.HrLeader : string.Empty,
+                    HrLeaderNo = CurrentUser.IsAdmin ? model.HrLeaderNo : CurrentUser.UserNo
                 },
                 PageModel = model.PageModel
             };
@@ -235,6 +235,33 @@ namespace Lstech.Api.Controllers
                 }
             };
             var result = await _manager.HealthUserStaffDeleteAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 获取有权限管理人员列表
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("get_health_power_staffs")]
+        public async Task<IActionResult> GetHealthPowerStaffs(HealthPowerStaffViewModel model)
+        {
+            var query = new QueryData<HealthPowerStaffQuery>()
+            {
+                Criteria = new HealthPowerStaffQuery()
+                {
+                    UserNo = model.UserNo,
+                    StaffName = model.UserName,
+                    Creator = CurrentUser.IsAdmin ? string.Empty : CurrentUser.UserNo
+                },
+                Extend = new QueryExtend()
+                {
+                    IsAdmin = CurrentUser.IsAdmin
+                },
+                PageModel = model.PageModel
+            };
+            var result = await _manager.HealthPowerStaffPageAsync(query);
 
             return Ok(result);
         }

@@ -247,5 +247,28 @@ namespace Lstech.PC.HealthManager
             return result;
         }
 
+        public async Task<ListResult<IHealthPowerStaff>> HealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query)
+        {
+            var result = new ListResult<IHealthPowerStaff>();
+            var dt = DateTime.Now;
+
+            var res = await HealthPcOperaters.HealthAccountOperater.GetHealthPowerStaffPageAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                foreach (var item in res.Data)
+                {
+                    result.Results.Add(item);
+                }
+                result.SetInfo("成功", 200);
+                result.PageModel = res.PageInfo;
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
     }
 }
