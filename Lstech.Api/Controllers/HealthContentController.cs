@@ -233,5 +233,38 @@ namespace Lstech.Api.Controllers
 
             return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
         }
+
+        /// <summary>
+        /// 导出体检内容-根据ad账号导出
+        /// </summary>
+        /// <param name="userNo"></param>
+        /// <param name="pwd"></param>
+        /// <param name="starTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        [HttpGet, Route("health_content_export_user_staff_ad_get")]
+        public async Task<IActionResult> HealthContentExportUserStaffAdGet(string userNo, string pwd, DateTime? starTime, DateTime? endTime)
+        {
+            var query = new QueryData<HealthContentQuery>()
+            {
+                Criteria = new HealthContentQuery()
+                {
+                    StarTime = starTime,
+                    EndTime = endTime
+                },
+                Extend = new QueryExtend()
+                {
+                    UserNo = userNo,
+                    Pwd = pwd
+                }
+            };
+            var result = await _manager.HealthContentExcelExportUserStaffAdAllAsync(query);
+            if (result.HasErr)
+            {
+                return Ok(result);
+            }
+
+            return File(result.Data, "application/ms-excel", $"{Guid.NewGuid().ToString()}.xlsx");
+        }
     }
 }

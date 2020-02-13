@@ -76,6 +76,10 @@ namespace TlgChinaService
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<string> GetUserADGUIDAsync(string username, string password);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://oa.tlgchina.com:8081/GetADuser", ReplyAction="*")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        System.Threading.Tasks.Task<string> GetADuserAsync(string username, string password);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://oa.tlgchina.com:8081/sendMail", ReplyAction="*")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         System.Threading.Tasks.Task<TlgChinaService.sendMailResponse> sendMailAsync(TlgChinaService.sendMailRequest request);
@@ -1278,6 +1282,11 @@ namespace TlgChinaService
         public System.Threading.Tasks.Task<string> GetUserADGUIDAsync(string username, string password)
         {
             return base.Channel.GetUserADGUIDAsync(username, password);
+        }
+        
+        public System.Threading.Tasks.Task<string> GetADuserAsync(string username, string password)
+        {
+            return base.Channel.GetADuserAsync(username, password);
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]

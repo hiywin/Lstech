@@ -1,6 +1,7 @@
 ﻿using Lstech.Common.Data;
 using Lstech.Entities.Health;
 using Lstech.IWCFService.Structs;
+using Lstech.Models.Health;
 using Lstech.PC.IHealthManager;
 using Lstech.PC.IHealthManager.Structs;
 using Lstech.PC.IHealthService.Structs;
@@ -51,6 +52,57 @@ namespace Lstech.PC.HealthManager
                         var userModel = res.Data.FirstOrDefault();
                         result.SetInfo(userModel, "登录成功！", 200);
                     }
+                }
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<IHealthUser>> HealthUserLoginExAsync(QueryData<HealthUserQuery> query)
+        {
+            var result = new ErrData<IHealthUser>();
+            var dt = DateTime.Now;
+
+            var res = await HealthPcOperaters.HealthAccountOperater.GetHealthUserPageAsync(query);
+            if (res.HasErr)
+            {
+                result.SetInfo(res.ErrMsg, res.ErrCode);
+            }
+            else
+            {
+                var queryEx = new QueryData<WcfADUserInfoQuery>()
+                {
+                    Criteria = new WcfADUserInfoQuery()
+                    {
+                        UserName = query.Criteria.AdAccount,
+                        Password = query.Criteria.Pwd
+                    }
+                };
+                var resUser = await WCFOperators.TlgChinaOperater.GetADUserInfoAsync(queryEx);
+                if (resUser.HasErr)
+                {
+                    result.SetInfo(resUser.ErrMsg, resUser.ErrCode);
+                }
+                else
+                {
+                    if(string.IsNullOrEmpty(resUser.Data?.UserNo))
+                    {
+                        result.SetInfo("用户名或密码错误！", -102);
+                        result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                        return result;
+                    }
+
+                    IHealthUser info = new HealthUser();
+                    info.UserNo = resUser.Data.UserNo;
+                    info.UserName = resUser.Data.UserName;
+                    info.AdAccount = resUser.Data.ADAccount;
+                    info.IsAdmin = false;
+                    if (res.Data.Count > 0)
+                    {
+                        info.IsAdmin = res.Data.FirstOrDefault().IsAdmin;
+                    }
+                    result.SetInfo(info, "登录成功！", 200);
                 }
             }
 

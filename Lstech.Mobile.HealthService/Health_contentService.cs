@@ -188,7 +188,7 @@ namespace Lstech.Mobile.HealthService
             string sql = string.Format(@"select distinct staff.StaffNo,staff.StaffName, case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite  
               from health_user_staff uf  left join health_staff staff on uf.StaffNo=staff.StaffNo 
               left join (select * from  health_content  where (CONVERT(varchar(100), CreateTime, 23)  ='{0}' or CreateTime is null) ) as content 
-              on content.Creator=staff.StaffNo  where uf.UserNo='{1}' " + strWhere, query.Criteria.date, query.Criteria.userNo);
+              on content.Creator=staff.StaffNo  where uf.UserNo='{1}'  and staff.StaffNo is not null" + strWhere, query.Criteria.date, query.Criteria.userNo);
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
                 try
@@ -222,7 +222,7 @@ namespace Lstech.Mobile.HealthService
             string sql = string.Format(@"select distinct staff.StaffNo,staff.StaffName, case   when content.Contentid is not null then 1 when content.Contentid is null then 0 else 0 end iswrite  
               from health_user_staff uf  left join health_staff staff on uf.StaffNo=staff.StaffNo 
               left join (select * from  health_content  where (CONVERT(varchar(100), CreateTime, 23)  ='{0}' or CreateTime is null) ) as content 
-              on content.Creator=staff.StaffNo  where uf.UserNo='{1}' " + strWhere, query.Criteria.date, query.Criteria.userNo);
+              on content.Creator=staff.StaffNo  where uf.UserNo='{1}'  and staff.StaffNo is not null" + strWhere, query.Criteria.date, query.Criteria.userNo);
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
                 try

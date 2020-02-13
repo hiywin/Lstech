@@ -13,6 +13,8 @@ namespace Lstech.PC.IHealthManager
     {
         Task<ErrData<IHealthUser>> HealthUserLoginAsync(QueryData<HealthUserQuery> query);
 
+        Task<ErrData<IHealthUser>> HealthUserLoginExAsync(QueryData<HealthUserQuery> query);
+
         Task<ListResult<IHealthUser>> HealthUsersPageAsync(QueryData<HealthUserQuery> query);
 
         Task<ListResult<IHealthStaff>> HealthStaffsPageAsync(QueryData<HealthStaffQuery> query);

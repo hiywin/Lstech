@@ -41,7 +41,7 @@ namespace Lstech.Api.Controllers
                     Pwd = model.Password
                 }
             };
-            var res = await _manager.HealthUserLoginAsync(query);
+            var res = await _manager.HealthUserLoginExAsync(query);
             if (res.HasErr)
             {
                 result.SetInfo(res.Msg, res.Code);

@@ -28,5 +28,7 @@ namespace Lstech.PC.IHealthManager
         Task<ListResult<DataTable>> GetHealthContentUserStaffAllAsync(QueryData<HealthContentQuery> query);
 
         Task<ErrData<byte[]>> HealthContentExcelExportUserStaffAllAsync(QueryData<HealthContentQuery> query);
+
+        Task<ErrData<byte[]>> HealthContentExcelExportUserStaffAdAllAsync(QueryData<HealthContentQuery> query);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Entities.WCF;
 using Lstech.IWCFService.Structs;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,18 @@ namespace Lstech.IWCFService
         /// <returns></returns>
         Task<DataResult<string>> GetUserADGuidAsync(QueryData<WcfADUserGuidQuery> query);
 
-
+        /// <summary>
+        /// 获取DD用户信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         Task<DataResult<string>> GetDDUserInfoAsync(QueryData<WebServiceDDQuery> query);
+
+        /// <summary>
+        /// 根据用户AD获取用户信息
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<IADUserInfo>> GetADUserInfoAsync(QueryData<WcfADUserInfoQuery> query);
     }
 }

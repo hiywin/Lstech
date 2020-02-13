@@ -1,7 +1,9 @@
 ﻿using Lstech.Common.Data;
 using Lstech.Common.Wcf;
+using Lstech.Entities.WCF;
 using Lstech.IWCFService;
 using Lstech.IWCFService.Structs;
+using Lstech.Models.WCF;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,31 +14,6 @@ namespace Lstech.WCFService
 {
     public class TlgChinaWebService : ITlgChinaWebService
     {
-        /// <summary>
-        /// 获取DD用户信息
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public async Task<DataResult<string>> GetDDUserInfoAsync(QueryData<WebServiceDDQuery> query)
-        {
-            var result = new DataResult<string>();
-            try
-            {
-                using (var chnl = WcfInvoke.CreateWCFChannel<lytechWebServiceSoap>(WcfInvoke.TlgChinaServiceUrl))
-                {
-                    var proxy = chnl.CreateChannel();
-                    result.Data = await proxy.GetUserInfoAndLastApprAsync(query.Criteria.code, query.Criteria.ProcessCode, query.Criteria.corpid);
-                }
-            }
-            catch (Exception ex)
-            {
-                result.SetErr(ex, -500);
-                result.Data = string.Empty;
-            }
-
-            return result;
-        }
-
         public async Task<DataResult<string>> GetUserADGuidAsync(QueryData<WcfADUserGuidQuery> query)
         {
             var result = new DataResult<string>();
@@ -66,5 +43,56 @@ namespace Lstech.WCFService
 
             return result;
         }
+
+        public async Task<DataResult<string>> GetDDUserInfoAsync(QueryData<WebServiceDDQuery> query)
+        {
+            var result = new DataResult<string>();
+            try
+            {
+                using (var chnl = WcfInvoke.CreateWCFChannel<lytechWebServiceSoap>(WcfInvoke.TlgChinaServiceUrl))
+                {
+                    var proxy = chnl.CreateChannel();
+                    result.Data = await proxy.GetUserInfoAndLastApprAsync(query.Criteria.code, query.Criteria.ProcessCode, query.Criteria.corpid);
+                }
+            }
+            catch (Exception ex)
+            {
+                result.SetErr(ex, -500);
+                result.Data = string.Empty;
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<IADUserInfo>> GetADUserInfoAsync(QueryData<WcfADUserInfoQuery> query)
+        {
+            var result = new DataResult<IADUserInfo>();
+            try
+            {
+                using (var chnl = WcfInvoke.CreateWCFChannel<lytechWebServiceSoap>(WcfInvoke.TlgChinaServiceUrl))
+                {
+                    var proxy = chnl.CreateChannel();
+                    var res = await proxy.GetADuserAsync(query.Criteria.UserName, query.Criteria.Password);
+                    if (!string.IsNullOrEmpty(res))
+                    {
+                        var users = res.Split('|');
+                        IADUserInfo info = new ADUserInfo();
+                        info.UserNo = users[0];
+                        info.UserName = users[1];
+                        info.ADAccount = users[2];
+
+                        result.Data = info;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result.SetErr(ex, -500);
+                result.Data = null;
+            }
+
+            return result;
+        }
+
     }
 }

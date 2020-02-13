@@ -1,6 +1,8 @@
 ﻿using Lstech.Common.Data;
 using Lstech.Common.Helpers;
 using Lstech.Entities.Health;
+using Lstech.IWCFService.Structs;
+using Lstech.Models.Health;
 using Lstech.PC.IHealthManager;
 using Lstech.PC.IHealthService.Structs;
 using Lstech.Utility;
@@ -644,11 +646,93 @@ namespace Lstech.PC.HealthManager
             var resUser = await HealthPcOperaters.HealthAccountOperater.GetHealthUserPageAsync(queryUser);
             if (resUser.HasErr || resUser.Data.Count <= 0)
             {
-                resUser.SetErr("账号不存在！", -102);
+                result.SetInfo("账号不存在！", -102);
                 result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
                 return result;
             }
             var loginUser = resUser.Data.FirstOrDefault();
+            #endregion
+
+            if (loginUser.IsAdmin)//登录账号为管理员时，根据HR负责人作为sheet导出
+            {
+                result = await HealthContentExcelExportByHrAllAsync(loginUser, query);
+            }
+            else//登录账号为非管理员时，登陆人作为sheet导出其权限下体检内容
+            {
+                var dicTable = new Dictionary<string, DataTable>();
+                var queryEx = query.Criteria;
+                queryEx.UpStaffNo = loginUser.IsAdmin ? string.Empty : loginUser.UserNo;
+                query.Criteria = queryEx;
+                var dtUserStaff = await GetHealthContentUserStaffAllAsync(query);
+                if (dtUserStaff.HasErr)
+                {
+                    result.SetInfo(dtUserStaff.Msg, dtUserStaff.Code);
+                    return result;
+                }
+                else
+                {
+                    dicTable.Add(loginUser.UserName, dtUserStaff.Results[0]);
+                }
+                result.Data = EPPlusHelper.ExcelExport(dicTable);
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<byte[]>> HealthContentExcelExportUserStaffAdAllAsync(QueryData<HealthContentQuery> query)
+        {
+            var result = new ErrData<byte[]>();
+            var dt = DateTime.Now;
+
+            IHealthUser loginUser = new HealthUser();
+            #region 验证AD账号是否已添加权限
+            var queryUser = new QueryData<HealthUserQuery>()
+            {
+                Criteria = new HealthUserQuery()
+                {
+                    AdAccount = query.Extend.UserNo
+                }
+            };
+            var healthUser = await HealthPcOperaters.HealthAccountOperater.GetHealthUserPageAsync(queryUser);//根据health_user判断是否管理员
+            if (healthUser.HasErr)
+            {
+                result.SetInfo(healthUser.ErrMsg, healthUser.ErrCode);
+                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                return result;
+            }
+            var queryAd = new QueryData<WcfADUserInfoQuery>()
+            {
+                Criteria = new WcfADUserInfoQuery()
+                {
+                    UserName = query.Extend.UserNo,
+                    Password = query.Extend.Pwd
+                }
+            };
+            var resUser = await WCFOperators.TlgChinaOperater.GetADUserInfoAsync(queryAd);//根据wcf获取账号信息
+            if (resUser.HasErr)
+            {
+                result.SetInfo(resUser.ErrMsg, resUser.ErrCode);
+                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                return result;
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(resUser.Data?.UserNo))
+                {
+                    result.SetInfo("用户名或密码错误！", -102);
+                    result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                    return result;
+                }
+                loginUser.UserNo = resUser.Data.UserNo;
+                loginUser.UserName = resUser.Data.UserName;
+                loginUser.AdAccount = resUser.Data.ADAccount;
+                loginUser.IsAdmin = false;
+                if (healthUser.Data.Count > 0)
+                {
+                    loginUser.IsAdmin = healthUser.Data.FirstOrDefault().IsAdmin;
+                }
+            }
             #endregion
 
             if (loginUser.IsAdmin)//登录账号为管理员时，根据HR负责人作为sheet导出

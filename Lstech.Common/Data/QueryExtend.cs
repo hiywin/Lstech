@@ -40,5 +40,10 @@ namespace Lstech.Common.Data
         /// 是否管理员
         /// </summary>
         public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Pwd { get; set; }
     }
 }

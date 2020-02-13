@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Lstech.IWCFService\Lstech.IWCFService.csproj" />
+    <ProjectReference Include="..\Lstech.Models\Lstech.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>
