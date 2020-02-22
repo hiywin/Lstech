@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Text;
 
 namespace Lstech.Common.Helpers
@@ -63,7 +64,8 @@ namespace Lstech.Common.Helpers
         /// <returns></returns>
         public static byte[] ExcelExport(Dictionary<string, DataTable> dicTable)
         {
-            var codes = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+            var codes = new string[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", 
+                "AA", "AB", "AC", "AD", "AE", "AF", "AG", "AH", "AI", "AJ", "AK", "AL", "AM", "AN", "AO", "AP", "AQ", "AR", "AS", "AT", "AU", "AV", "AW", "AX", "AY", "AZ" };
             byte[] fileContents;
             try
             {
@@ -103,6 +105,59 @@ namespace Lstech.Common.Helpers
                 return null;
             }
             return fileContents;
+        }
+
+        /// <summary>
+        /// 读取Excel组装成DataTable列表
+        /// </summary>
+        /// <param name="stream">Excel流文件</param>
+        /// <param name="titleIndex">标题行索引</param>
+        /// <returns>Excel表中一个sheet对应一个DataTable</returns>
+        public static List<DataTable> ExcelImport(Stream stream, int titleIndex)
+        {
+            List<DataTable> result = new List<DataTable>();
+            try
+            {
+                using (ExcelPackage package = new ExcelPackage(stream))
+                {
+                    var sheets = package.Workbook.Worksheets;
+                    foreach (var sheet in sheets)
+                    {
+                        int rowCount = sheet.Dimension.Rows;
+                        int colCount = sheet.Dimension.Columns;
+
+                        #region 标题做成表头
+                        var table = new DataTable();
+                        var lstTitle = new List<string>();
+                        for (int i = 1; i <= colCount; i++)
+                        {
+                            var title = sheet.Cells[titleIndex, i].Value.ToString();
+                            table.Columns.Add(title, Type.GetType("System.String"));
+                            lstTitle.Add(title);
+                        }
+                        #endregion
+
+                        for (int i = titleIndex + 1; i <= rowCount; i++)
+                        {
+                            DataRow row = table.NewRow();
+                            for (int j = 1; j <= colCount; j++)
+                            {
+                                row[lstTitle[j - 1]] = sheet.Cells[i, j].Value.ToString();
+                            }
+                            table.Rows.Add(row);
+                        }
+
+                        result.Add(table);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+
+            return result;
         }
     }
 }

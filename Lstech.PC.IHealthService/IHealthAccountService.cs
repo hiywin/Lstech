@@ -17,6 +17,12 @@ namespace Lstech.PC.IHealthService
         IHealthUserStaff NewHealthUserStaff();
 
         /// <summary>
+        /// 创建新实例
+        /// </summary>
+        /// <returns></returns>
+        IHealthStaff NewHealthStaff();
+
+        /// <summary>
         /// 分页获取用户
         /// </summary>
         /// <param name="query"></param>
@@ -71,6 +77,13 @@ namespace Lstech.PC.IHealthService
         /// <param name="query"></param>
         /// <returns></returns>
         Task<DataResult<List<IHealthPowerStaff>>> GetHealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query);
+
+        /// <summary>
+        /// 根据Excel模板导入员工数据
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthStaffImportAsync(QueryData<HealthStaffImportQuery> query);
 
     }
 }

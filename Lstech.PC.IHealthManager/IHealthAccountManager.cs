@@ -4,6 +4,7 @@ using Lstech.PC.IHealthManager.Structs;
 using Lstech.PC.IHealthService.Structs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,5 +31,7 @@ namespace Lstech.PC.IHealthManager
         Task<ErrData<bool>> HealthUserStaffDeleteAsync(QueryData<HealthUserStaffDeleteQuery> query);
 
         Task<ListResult<IHealthPowerStaff>> HealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query);
+
+        Task<ErrData<bool>> HealthStaffImportAsync(QueryData<Stream> query);
     }
 }

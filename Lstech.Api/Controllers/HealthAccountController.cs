@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Lstech.Api.Authorize;
@@ -262,6 +263,29 @@ namespace Lstech.Api.Controllers
                 PageModel = model.PageModel
             };
             var result = await _manager.HealthPowerStaffPageAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 批量新增员工资料并给组长、集合组长、HR负责人添加权限-Excel导入
+        /// </summary>
+        /// <param name="form"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost,Route("health_staff_impot")]
+        public async Task<IActionResult> HealthStaffImport(IFormCollection form)
+        {
+            var stream = form?.Files[0]?.OpenReadStream();
+            var query = new QueryData<Stream>()
+            {
+                Criteria = stream,
+                Extend = new QueryExtend()
+                {
+                    UserNo = CurrentUser.UserNo,
+                    UserName = CurrentUser.UserName
+                }
+            };
+            var result = await _manager.HealthStaffImportAsync(query);
 
             return Ok(result);
         }

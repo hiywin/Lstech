@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Common.Helpers;
 using Lstech.Entities.Health;
 using Lstech.IWCFService.Structs;
 using Lstech.Models.Health;
@@ -8,6 +9,8 @@ using Lstech.PC.IHealthService.Structs;
 using Lstech.Utility;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -317,6 +320,116 @@ namespace Lstech.PC.HealthManager
                 }
                 result.SetInfo("成功", 200);
                 result.PageModel = res.PageInfo;
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
+        public async Task<ErrData<bool>> HealthStaffImportAsync(QueryData<Stream> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            if (query.Criteria == null)
+            {
+                result.SetInfo("请先选择防疫信息表！", -102);
+                result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+                return result;
+            }
+            //将Excel转换成DataTable
+            var tables = EPPlusHelper.ExcelImport(query.Criteria, 2);
+            if (tables == null)
+            {
+                result.SetInfo("防疫信息表有误，请检查！", -102);
+            }
+            else
+            {
+                #region 组装员工资料、组长权限、集合组长权限、HR负责人权限
+
+                var lstStaff = new List<IHealthStaff>();
+                var lstGroupStaff = new List<IHealthUserStaff>();
+                var lstAggStaff = new List<IHealthUserStaff>();
+                var lstHrStaff = new List<IHealthUserStaff>();
+                foreach (var table in tables)
+                {
+                    if (table != null && table.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in table.Rows)
+                        {
+                            //员工资料
+                            var staff = HealthPcOperaters.HealthAccountOperater.NewHealthStaff();//存入health_staff
+                            staff.StaffNo = row[2].ToString();
+                            staff.StaffName = row[3].ToString();
+                            staff.GroupType = row[4].ToString();
+                            staff.GroupLeader = row[5].ToString();
+                            staff.GroupLeaderNo = row[6].ToString();
+                            staff.AggLeader = row[7].ToString();
+                            staff.AggLeaderNo = row[8].ToString();
+                            staff.CommandLeader = row[9].ToString();
+                            staff.CommondLeaderNo = row[10].ToString();
+                            staff.HrLeader = row[11].ToString();
+                            staff.HrLeaderNo = row[12].ToString();
+                            lstStaff.Add(staff);
+
+                            //组长权限
+                            var groupStaff = HealthPcOperaters.HealthAccountOperater.NewHealthUserStaff();//存入health_user_staff
+                            groupStaff.UserNo= row[6].ToString();
+                            groupStaff.StaffNo= row[2].ToString();
+                            groupStaff.Creator = query.Extend.UserNo;
+                            groupStaff.CreateName = query.Extend.UserName;
+                            lstGroupStaff.Add(groupStaff);
+
+                            //集合组长权限
+                            var aggStaff = HealthPcOperaters.HealthAccountOperater.NewHealthUserStaff();//存入health_user_staff
+                            aggStaff.UserNo = row[8].ToString();
+                            aggStaff.StaffNo = row[2].ToString();
+                            aggStaff.Creator = query.Extend.UserNo;
+                            aggStaff.CreateName = query.Extend.UserName;
+                            lstAggStaff.Add(aggStaff);
+
+                            //HR负责人权限
+                            var hrStaff = HealthPcOperaters.HealthAccountOperater.NewHealthUserStaff();//存入health_user_staff
+                            hrStaff.UserNo = row[12].ToString();
+                            hrStaff.StaffNo = row[2].ToString();
+                            hrStaff.Creator = query.Extend.UserNo;
+                            hrStaff.CreateName = query.Extend.UserName;
+                            lstHrStaff.Add(hrStaff);
+                        }
+                    }
+                }
+
+                #endregion
+                #region 数据库操作
+
+                if (lstStaff.Count > 0 && lstGroupStaff.Count>0 && lstAggStaff.Count>0 && lstHrStaff.Count>0)
+                {
+                    var queryEx = new QueryData<HealthStaffImportQuery>()
+                    {
+                        Criteria = new HealthStaffImportQuery()
+                        {
+                            LstStaff = lstStaff,
+                            LstGroupStaff = lstGroupStaff,
+                            LstAggStaff = lstAggStaff,
+                            LstHrStaff = lstHrStaff
+                        }
+                    };
+                    var res = await HealthPcOperaters.HealthAccountOperater.HealthStaffImportAsync(queryEx);
+                    if (res.HasErr)
+                    {
+                        result.SetInfo(false, res.ErrMsg, res.ErrCode);
+                    }
+                    else
+                    {
+                        result.SetInfo(true, "导入成功！", 200);
+                    }
+                }
+                else
+                {
+                    result.SetInfo("防疫信息表数据不完整，请检查！", -102);
+                }
+
+                #endregion
             }
 
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;

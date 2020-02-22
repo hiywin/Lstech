@@ -20,6 +20,11 @@ namespace Lstech.PC.HealthService
             return new HealthUserStaff();
         }
 
+        public IHealthStaff NewHealthStaff()
+        {
+            return new HealthStaff();
+        }
+
         public async Task<DataResult<List<IHealthUser>>> GetHealthUserPageAsync(QueryData<HealthUserQuery> query)
         {
             var result = new DataResult<List<IHealthUser>>();
@@ -323,6 +328,86 @@ namespace Lstech.PC.HealthService
                     result.Data = null;
                 }
             }
+            return result;
+        }
+
+        public async Task<DataResult<int>> HealthStaffImportAsync(QueryData<HealthStaffImportQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sqlsi = @"insert into [dbo].[health_staff]([StaffNo],[StaffName],[GroupType],[GroupLeader],[GroupLeaderNo],[AggLeader],[AggLeaderNo],[CommandLeader],[CommondLeaderNo],[HrLeader],[HrLeaderNo])
+                values(@StaffNo,@StaffName,@GroupType,@GroupLeader,@GroupLeaderNo,@AggLeader,@AggLeaderNo,@CommandLeader,@CommondLeaderNo,@HrLeader,@HrLeaderNo)";
+            string sqlui = @"insert into dbo.health_user_staff([UserNo],[StaffNo],[Creator],[CreateName],[CreateTime])
+                values(@UserNo,@StaffNo,@Creator,@CreateName,getdate())";
+            string sqlss = @"select * from [dbo].[health_staff] where [StaffNo]=@StaffNo";
+            using (IDbConnection dbConn=MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    foreach (var item in query.Criteria.LstStaff)//保存员工信息
+                    {
+                        result.Data = await MssqlHelper.QueryCountAsync(dbConn, sqlss, new { StaffNo = item.StaffNo }, transaction);
+                        if (result.Data > 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr(string.Format("员工工号{0}已存在，请重新检查！", item.StaffNo), -101);
+                            return result;
+                        }
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlsi, item, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr(string.Format("员工工号{0}保存失败！", item.StaffNo), -101);
+                            return result;
+                        }
+                    }
+                    #region 添加组长权限
+                    foreach (var item in query.Criteria.LstGroupStaff)
+                    {
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlui, item, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr(string.Format("组长权限{0}|{1}保存失败！", item.UserNo, item.StaffNo), -101);
+                            return result;
+                        }
+                    }
+                    #endregion
+                    #region 添加集合组组长权限
+                    foreach (var item in query.Criteria.LstAggStaff)
+                    {
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlui, item, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr(string.Format("集合组长权限{0}|{1}保存失败！", item.UserNo, item.StaffNo), -101);
+                            return result;
+                        }
+                    }
+                    #endregion
+                    #region 添加HR负责人权限
+                    foreach (var item in query.Criteria.LstHrStaff)
+                    {
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlui, item, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr(string.Format("HR负责人权限{0}|{1}保存失败！", item.UserNo, item.StaffNo), -101);
+                            return result;
+                        }
+                    }
+                    #endregion
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
             return result;
         }
     }

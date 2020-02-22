@@ -756,8 +756,8 @@ namespace Lstech.PC.HealthManager
                     dicTable.Add(loginUser.UserName, dtUserStaff.Results[0]);
                 }
                 result.Data = EPPlusHelper.ExcelExport(dicTable);
+                
             }
-
             result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
             return result;
         }
