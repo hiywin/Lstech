@@ -166,21 +166,83 @@ namespace Lstech.PC.HealthService
 
             string sql = @"delete from [dbo].[health_staff] where Id=@Id";
             string sqls = @"select * from [dbo].[health_staff] where Id=@Id";
+            string sqlt = @"delete from dbo.health_user_staff where StaffNo = (select StaffNo from dbo.health_staff where Id=@Id)";
             using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
             {
+                IDbTransaction transaction = dbConn.BeginTransaction();
                 try
                 {
-                    result.Data = await MssqlHelper.QueryCountAsync(dbConn, sqls, query.Criteria);
+                    result.Data = await MssqlHelper.QueryCountAsync(dbConn, sqls, query.Criteria, transaction);
                     if (result.Data <= 0)
                     {
+                        transaction.Rollback();
                         result.SetErr("该数据已被删除！", -101);
                         return result;
                     }
-                    result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sql, query.Criteria);
+                    result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlt, query.Criteria, transaction);
+                    if (result.Data < 0)
+                    {
+                        transaction.Rollback();
+                        result.SetErr("删除员工权限失败，请重试！", -101);
+                        return result;
+                    }
+                    result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sql, query.Criteria, transaction);
                     if (result.Data <= 0)
                     {
-                        result.SetErr("删除失败，请重试！", -101);
+                        transaction.Rollback();
+                        result.SetErr("删除员工资料失败，请重试！", -101);
+                        return result;
                     }
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    result.SetErr(ex, -500);
+                    result.Data = -1;
+                }
+            }
+
+            return result;
+        }
+
+        public async Task<DataResult<int>> HealthStaffBatchDeleteAsync(QueryData<HealthStaffBatchDeleteQuery> query)
+        {
+            var result = new DataResult<int>();
+
+            string sql = @"delete from [dbo].[health_staff] where StaffNo=@StaffNo";
+            string sqls = @"select * from [dbo].[health_staff] where StaffNo=@StaffNo";
+            string sqlt = @"delete from dbo.health_user_staff where UserNo=@StaffNo or StaffNo=@StaffNo";
+            using (IDbConnection dbConn = MssqlHelper.OpenMsSqlConnection(MssqlHelper.GetConn))
+            {
+                IDbTransaction transaction = dbConn.BeginTransaction();
+                try
+                {
+                    foreach (var staffNo in query.Criteria.LstStaffNo)
+                    {
+                        result.Data = await MssqlHelper.QueryCountAsync(dbConn, sqls, new { StaffNo = staffNo }, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr("员工数据已被删除，请重试！", -101);
+                            return result;
+                        }
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sqlt, new { StaffNo = staffNo }, transaction);
+                        if (result.Data < 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr("删除员工权限失败，请重试！", -101);
+                            return result;
+                        }
+                        result.Data = await MssqlHelper.ExecuteSqlAsync(dbConn, sql, new { StaffNo = staffNo }, transaction);
+                        if (result.Data <= 0)
+                        {
+                            transaction.Rollback();
+                            result.SetErr("删除员工资料失败，请重试！", -101);
+                            return result;
+                        }
+                    }
+                    
+                    transaction.Commit();
                 }
                 catch (Exception ex)
                 {

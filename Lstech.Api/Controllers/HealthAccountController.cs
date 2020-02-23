@@ -156,7 +156,7 @@ namespace Lstech.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [Authorize, HttpPost, Route("health_staff_delete")]
-        public async Task<IActionResult> HealthStaffSDelete(HealthStaffDeleteViewModel model)
+        public async Task<IActionResult> HealthStaffDelete(HealthStaffDeleteViewModel model)
         {
             var query = new QueryData<HealthStaffQuery>()
             {
@@ -166,6 +166,26 @@ namespace Lstech.Api.Controllers
                 }
             };
             var result = await _manager.HealthStaffDeleteAsync(query);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// 批量删除人员结构员工
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize, HttpPost, Route("health_staff_batch_delete")]
+        public async Task<IActionResult> HealthStaffBatchDelete(HealthStaffBatchDeleteViewModel model)
+        {
+            var query = new QueryData<HealthStaffBatchDeleteQuery>()
+            {
+                Criteria = new HealthStaffBatchDeleteQuery()
+                {
+                    LstStaffNo = model.LstStaffNo
+                }
+            };
+            var result = await _manager.HealthStaffBatchDeleteAsync(query);
 
             return Ok(result);
         }

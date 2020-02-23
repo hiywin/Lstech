@@ -24,6 +24,8 @@ namespace Lstech.PC.IHealthManager
 
         Task<ErrData<bool>> HealthStaffDeleteAsync(QueryData<HealthStaffQuery> query);
 
+        Task<ErrData<bool>> HealthStaffBatchDeleteAsync(QueryData<HealthStaffBatchDeleteQuery> query);
+
         Task<ErrData<bool>> HealthUserStaffSaveAsync(QueryData<HealthUserStaffModel> query);
 
         Task<ListResult<IHealthUserStaffInfo>> HealthUserStaffInfoPageAsync(QueryData<HealthUserStaffInfoQuery> query);

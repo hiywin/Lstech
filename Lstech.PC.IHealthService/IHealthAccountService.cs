@@ -51,6 +51,13 @@ namespace Lstech.PC.IHealthService
         Task<DataResult<int>> HealthStaffDeleteAsync(QueryData<HealthStaffQuery> query);
 
         /// <summary>
+        /// 人员结构批量删除员工
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
+        Task<DataResult<int>> HealthStaffBatchDeleteAsync(QueryData<HealthStaffBatchDeleteQuery> query);
+
+        /// <summary>
         /// 分页获取关联表-人员结构列表
         /// </summary>
         /// <param name="query"></param>

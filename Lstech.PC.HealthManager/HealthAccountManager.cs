@@ -216,6 +216,32 @@ namespace Lstech.PC.HealthManager
             return result;
         }
 
+        public async Task<ErrData<bool>> HealthStaffBatchDeleteAsync(QueryData<HealthStaffBatchDeleteQuery> query)
+        {
+            var result = new ErrData<bool>();
+            var dt = DateTime.Now;
+
+            if (query.Criteria.LstStaffNo.Count <= 0)
+            {
+                result.SetInfo(false, "请选择需要删除的数据！", -102);
+            }
+            else
+            {
+                var res = await HealthPcOperaters.HealthAccountOperater.HealthStaffBatchDeleteAsync(query);
+                if (res.HasErr)
+                {
+                    result.SetInfo(false, res.ErrMsg, res.ErrCode);
+                }
+                else
+                {
+                    result.SetInfo(true, "批量删除成功！", 200);
+                }
+            }
+
+            result.ExpandSeconds = (DateTime.Now - dt).TotalSeconds;
+            return result;
+        }
+
         public async Task<ListResult<IHealthUserStaffInfo>> HealthUserStaffInfoPageAsync(QueryData<HealthUserStaffInfoQuery> query)
         {
             var result = new ListResult<IHealthUserStaffInfo>();
