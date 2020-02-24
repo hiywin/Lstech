@@ -1,4 +1,5 @@
 ﻿using Lstech.Common.Data;
+using Lstech.Entities.Enums;
 using Lstech.Entities.Health;
 using Lstech.PC.IHealthManager.Structs;
 using Lstech.PC.IHealthService.Structs;
@@ -35,5 +36,6 @@ namespace Lstech.PC.IHealthManager
         Task<ListResult<IHealthPowerStaff>> HealthPowerStaffPageAsync(QueryData<HealthPowerStaffQuery> query);
 
         Task<ErrData<bool>> HealthStaffImportAsync(QueryData<Stream> query);
+
     }
 }

@@ -292,7 +292,7 @@ namespace Lstech.Api.Controllers
         /// </summary>
         /// <param name="form"></param>
         /// <returns></returns>
-        [Authorize, HttpPost,Route("health_staff_impot")]
+        [Authorize, HttpPost,Route("health_staff_import")]
         public async Task<IActionResult> HealthStaffImport(IFormCollection form)
         {
             var stream = form?.Files[0]?.OpenReadStream();
