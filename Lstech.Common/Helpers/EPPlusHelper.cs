@@ -59,8 +59,7 @@ namespace Lstech.Common.Helpers
         /// <summary>
         /// 单个excel导出多个sheet
         /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="dictable"></param>
+        /// <param name="dictable">sheet名和对应数据</param>
         /// <returns></returns>
         public static byte[] ExcelExport(Dictionary<string, DataTable> dicTable)
         {
@@ -149,7 +148,6 @@ namespace Lstech.Common.Helpers
 
                         result.Add(table);
                     }
-
                 }
             }
             catch (Exception ex)
